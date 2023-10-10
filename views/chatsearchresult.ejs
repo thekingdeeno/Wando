@@ -1,0 +1,21 @@
+<%- include('partials/header.ejs') %>
+
+<div>
+    Found <%= foundUser.length %> poeple.
+</div>
+
+<% foundUser.forEach(user => { %>
+    <div class="row">
+        <a href="/chat/<%=user._id%>">
+            <div>
+                <h1><%= user.appUsername %></h1>
+            </div>
+        </a>
+    <div>
+        <img src="" alt="">
+    </div>
+
+    </div>
+<% }) %>
+
+<%- include('partials/footer.ejs') %>

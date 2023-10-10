@@ -1,0 +1,40 @@
+<%- include('partials/header.ejs') %>
+
+<div>
+    <table>
+        <tbody>
+            <tr>
+                <td><img src="" alt=""></td>
+            </tr>
+            <tr>
+                <h1><%= recipientData.appUsername %></h1>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<div id="messages">
+    <% (chatData[0].messages).forEach(message => { %>
+            <div class="">
+                <p><%= message.authorName %>: <%= message.text %></p>
+            </div>
+    <% }) %>
+</div>
+
+<div>
+    <form action="/chat" method="POST">
+        <div class="row">
+
+            <input type="hidden" name="senderId" value="<%= recipientData._id %>">
+            <input type="hidden" name="senderName" value="<%= senderData.appUsername %>">
+            
+            <input type="hidden" name="recipientId" value="<%= recipientData._id %>">
+            <input type="hidden" name="recipientName" value="<%= recipientData._appUsername %>">
+
+            <div><input name="message" type="text" placeholder="message"></div>
+            <div><button type="submit"><i class="fa-solid fa-paper-plane"></i></button></div>
+        </div>
+    </form>
+</div>
+
+<%- include('partials/footer.ejs') %>

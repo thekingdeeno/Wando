@@ -1,0 +1,78 @@
+<%- include('partials/header.ejs') %>
+
+<div class="row">
+    <!-- side bar buttons  -->
+    <div class="left-pane col">
+        <h1><a href="/">Wando</a></h1>
+        <div id="tabs">
+            <div class="tab-btn">
+                <a href="http://"><i class="fa-solid fa-house"></i>Home</a>
+            </div>
+            <div class="tab-btn">
+                <a href="http://"><i class="fa-solid fa-magnifying-glass"></i>Discover</a>
+            </div>
+            <div class="tab-btn">
+                <a href="http://"><i class="fa-solid fa-fire"></i>Camps</a>
+            </div>
+            <div class="tab-btn">
+                <a href="http://"><i class="fa-regular fa-envelope"></i>Messages</a>
+            </div>            
+            <div class="tab-btn">
+                <a href="http://"><i class="fa-regular fa-comment"></i>Notifications</a>
+            </div>
+            <div class="tab-btn">
+                <a href="http://"><i class="fa-solid fa-plus"></i>Post</a>
+            </div>
+            <div class="tab-btn">
+                <a href="http://"><i class="fa-regular fa-user"></i>Profile</a>
+            </div>
+        </div>
+        <div id="more-options">
+            <button>more</button>
+        </div>
+    </div>
+
+
+
+    <!-- claver posts -->
+    <div class="middle-pane col">
+        <h1>Main Content</h1>
+
+
+    </div>
+
+
+
+
+
+
+    <!-- friends & messages -->
+    <div class="right-pane col">
+        <div id="search-box">
+            <input type="text" placeholder="search">
+        </div>
+        <div id="friends-tab">
+            <div>
+                <h3>Friends</h3> <a href="/myfrieands">more</a>
+            </div>
+            <div id="friends-list">
+                <ul>
+                    <li>
+                        <i class="fa-solid fa-user"></i> User 1
+                    </li>
+                    <li>
+                        <i class="fa-solid fa-user"></i> User 1
+                    </li>
+                    <li>
+                        <i class="fa-solid fa-user"></i> User 1
+                    </li>
+                    <li>
+                        <i class="fa-solid fa-user"></i> User 1
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<%- include('partials/footer.ejs') %>

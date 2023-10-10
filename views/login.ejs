@@ -1,0 +1,23 @@
+<%- include('partials/header.ejs') %>
+
+<h1><a href="/">Wando</a></h1>
+<p>Log in page</p>
+
+<div>
+<form action="/login" method="POST">
+    <div>
+        <input type="email" name="username" placeholder="Email">
+    </div>
+    <div>
+        <input type="password" name="password" placeholder="password">
+    </div>
+
+    <div>
+        <button class="btn btn-dark" type="submit">Log In</button>
+    </div>
+    
+</form>
+</div>
+
+
+<%- include('partials/footer.ejs') %>

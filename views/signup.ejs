@@ -1,0 +1,27 @@
+<%- include('partials/header.ejs') %>
+
+    <div class="col">
+        <div class="card" id="signup form">
+        <div class="card-header">
+            <h1 class="card-title">Wando</h1>
+            <p class="card-text">Sign up to Wando today and find communities where you feel at home</p>
+        </div>
+
+        <form action="/signup" method="POST">
+            <div class="mb-2">
+                <input type="email" name="username" placeholder="Email">
+            </div>
+            <div class="mb-2">
+                <input type="password" name="password" placeholder="password">
+            </div>
+
+        <button class="btn btn-dark" type="submit">Sign Up</button>
+        </form>
+        </div>
+
+    </div>
+
+
+
+
+<%- include('partials/footer.ejs') %>

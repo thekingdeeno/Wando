@@ -1,0 +1,28 @@
+body {
+    padding: 10px;
+    background-color: rgb(158, 8, 196);
+    font-size: larger;
+}
+
+.row{
+    background-color: rgba(0, 255, 255, 0.171);
+}
+
+
+/* Left Showcase  */
+#left-showcase{
+background-color: rgba(0, 0, 255, 0.363);
+text-align: center;
+padding: 20px;
+}
+
+/* right showcase */
+#right-showcase{
+    background-color: rgba(165, 42, 42, 0.397);
+    padding: 20px;
+    text-align: center;
+}
+
+#ceo-image img{
+    border-radius: 50%;
+}

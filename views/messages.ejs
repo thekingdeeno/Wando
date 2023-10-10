@@ -1,0 +1,120 @@
+<%- include('partials/header.ejs') %>
+
+
+
+<div class="row">
+    <div id="side-bar" class="col">
+        <h1><a href="/">Wando</a></h1>
+        <div id="tabs">
+            <div class="tab-btn">
+                <a href="/home"><i class="fa-solid fa-house"></i>Home</a>
+            </div>
+            <div class="tab-btn">
+                <a href="http://"><i class="fa-solid fa-magnifying-glass"></i>Discover</a>
+            </div>
+            <div class="tab-btn">
+                <a href="http://"><i class="fa-solid fa-fire"></i>Camps</a>
+            </div>
+            <div class="tab-btn">
+                <a href="/messages"><i class="fa-regular fa-envelope"></i>Messages</a>
+            </div>            
+            <div class="tab-btn">
+                <a href="http://"><i class="fa-regular fa-comment"></i>Notifications</a>
+            </div>
+            <div class="tab-btn">
+                <a href="/upload"><i class="fa-solid fa-plus"></i>Post</a>
+            </div>
+            <div class="tab-btn">
+                <a href="http://"><i class="fa-regular fa-user"></i>Profile</a>
+            </div>
+        </div>
+        <div id="more-options">
+            <button>more</button>
+        </div>
+    </div>
+
+
+    
+
+    <% if (chats.length===0) { %>
+    <div id="message-page" class="col">
+        <div>
+            <h1>@<%= myUsername %></h1>
+        </div>
+        <div>
+            <h1>Send a DM</h1>
+        </div>
+        <div>
+            <form action="/messages" method="POST">
+                <input name="search" type="text" placeholder="search">
+                <button type="submit">Find</button>
+            </form>
+        </div>
+        <div id="messages">
+
+
+        </div>
+    </div>     
+    <% }else{ %>
+        <div id="message-page" class="col">
+            <div>
+                <h1>@<%= myUsername %></h1>
+            </div>
+            <div>
+                <form action="/messages" method="POST">
+                    <input name="search" type="text" placeholder="search">
+                    <button type="submit">Find</button>
+                </form>
+            </div>
+
+
+
+
+            <% chats.forEach(chat => { %>
+
+            <% (chat.users).forEach(user => { %>
+
+                <% if ((user.userId).toString() != myObjId.toString()) { %>
+            <div>
+                <div id="chat">
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td><img src="" alt=""></td>
+                                <td>
+                                <h5>
+                                <a href="/chat/<%=user.userId%>"+> <%=user.userName%></a>
+                                </h5>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>  
+                <% } %>
+
+                     
+
+
+                
+                    
+            <% }) %>
+              
+
+          
+            <% }) %>
+
+
+
+            <div id="messages">
+    
+    
+            </div>
+        </div>
+    <% } %>
+
+
+
+</div>
+
+<%- include('partials/footer.ejs') %>

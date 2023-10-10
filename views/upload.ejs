@@ -1,0 +1,25 @@
+<%- include('partials/header.ejs') %>
+<div>
+    <h1>new post</h1>
+</div>
+
+<div>
+    <form action="/upload" method="POST">
+        <div>
+            <input type="text" name="title" placeholder="title">
+        </div>
+        <div>
+            <h5>Content</h5>
+        </div>
+        <div>
+            <textarea name="content" id="" cols="0" rows="0"></textarea>
+        </div>
+        
+        <!-- <input type="image" src="" alt=""> -->
+        <div>
+            <button type="submit">Post</button>
+        </div>
+        
+    </form>
+</div>
+<%- include('partials/footer.ejs') %>

@@ -1,0 +1,173 @@
+<%- include('partials/header.ejs') %>
+
+<div class="row">
+    <!-- side bar buttons  -->
+    <div id="left-pane" class="col">
+        <h1><a href="/">Wando</a></h1>
+        <div id="tabs">
+            <div class="tab-btn">
+                <a href="http://"><i class="fa-solid fa-house"></i>Home</a>
+            </div>
+            <div class="tab-btn">
+                <a href="http://"><i class="fa-solid fa-magnifying-glass"></i>Discover</a>
+            </div>
+            <div class="tab-btn">
+                <a href="http://"><i class="fa-solid fa-fire"></i>Camps</a>
+            </div>
+            <div class="tab-btn">
+                <a href="/messages"><i class="fa-regular fa-envelope"></i>Messages</a>
+            </div>            
+            <div class="tab-btn">
+                <a href="http://"><i class="fa-regular fa-comment"></i>Notifications</a>
+            </div>
+            <div class="tab-btn">
+                <a href="/upload"><i class="fa-solid fa-plus"></i>Post</a>
+            </div>
+            <div class="tab-btn">
+                <a href="http://"><i class="fa-regular fa-user"></i>Profile</a>
+            </div>
+        </div>
+        <div id="more-options">
+            <button>more</button>
+        </div>
+    </div>
+
+
+
+
+
+
+    <div id="middle-pane" class="col">
+        <h1>Main Content</h1>
+
+
+
+    <% postArray.forEach(post => { %>
+
+
+        <% if (post.image) { %>
+    <div class="card text-bg-dark mb-3 post" style="width: 18rem;">
+        <div class="card-header">
+            <i class="fa-solid fa-user"></i> 
+            <a href="/profile"><%= post.authorUsername %></a>
+            <button id="follow-button" type="submit">follow</button>
+        </div>
+        <img src="images/ceo.jpg" class="card-img-top" alt="...">
+        <div class="card-body">
+            <h5 class="card-title"><%= post.title %></h5>
+            <p class="card-text"><%= post.content %></p>
+        </div>
+
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item">
+                <i class="fa-regular fa-heart"></i>
+                <i class="fa-regular fa-comment"></i>
+                <i class="fa-solid fa-retweet"></i>
+                <i class="fa-regular fa-share-from-square"></i>
+            </li>
+            <li class="list-group-item">
+                <a href= "postname/likes"><%= post.likes.length  %> Likes</a>
+                <!-- <p class="post-caption"><a href="/profile">user_name</a> Lorem ipsum dolor sit</p> -->
+
+                <p class="post-comments"><a href="/postname/comments"><%= post.comments.length %> users commented</a></p>
+
+                <% (post.comments).forEach(comment => { %>
+                <p><a href="/profile"><%= comment.appUsername %></a> <%= comment.content %>.  <%= comment.likes %> Likes</p>
+                <% }) %>>
+
+
+            </li>
+            <li class="list-group-item ">
+                <form action="/post" method="post">
+                    <input type="text" name="comment" id="" placeholder="comment...">
+                </form>
+            </li>
+        </ul>
+
+        </div>
+        <hr>         
+        <% } else { %>
+            <div class="card text-bg-dark mb-3 post" style="width: 18rem;">
+                <div class="card-header">
+                    <i class="fa-solid fa-user"></i> 
+                    <a href="/profile"><%= post.authorUsername %></a>
+                    <button id="follow-button" type="submit">follow</button>
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title"><%= post.title %></h5>
+                    <p class="card-text"><%= post.content %></p>
+                </div>
+        
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">
+                        <button><i class="fa-regular fa-heart"></i></button>
+                        <button><i class="fa-regular fa-comment"></i></button>
+                        <button><i class="fa-solid fa-retweet"></i></button>
+                        <button><i class="fa-regular fa-share-from-square"></i></button>
+                        
+                    </li>
+                    <li class="list-group-item">
+                        <a href= "postname/likes"><%= post.likes.length  %> Likes</a>
+                        <!-- <p class="post-caption"><a href="/profile">user_name</a> Lorem ipsum dolor sit</p> -->
+        
+                        <p class="post-comments"><a href="/postname/comments"><%= post.comments.length %> users commented</a></p>
+        
+                        <% (post.comments).forEach(comment => { %>
+                        <p><a href="/profile"><%= comment.appUsername %></a> <%= comment.content %>.  <%= comment.likes %> Likes</p>
+                        <% }) %>>
+        
+        
+                    </li>
+                    <li class="list-group-item ">
+                        <form action="/post" method="post">
+                            <input type="text" name="comment" id="" placeholder="comment...">
+                        </form>
+                    </li>
+                </ul>
+        
+                </div>
+                <hr>
+        <% } %>        
+
+
+
+    <% }) %>
+
+
+    </div>
+
+
+
+
+
+
+    <!-- friends & messages -->
+    <div id="right-pane" class="col">
+        <div id="search-box">
+            <input type="text" placeholder="search">
+        </div>
+        <div id="friends-tab">
+            <div>
+                <h3>Friends</h3> <a href="/myfrieands">more</a>
+            </div>
+            <div id="friends-list">
+                <ul>
+                    <li>
+                        <i class="fa-solid fa-user"></i> User 1
+                    </li>
+                    <li>
+                        <i class="fa-solid fa-user"></i> User 1
+                    </li>
+                    <li>
+                        <i class="fa-solid fa-user"></i> User 1
+                    </li>
+                    <li>
+                        <i class="fa-solid fa-user"></i> User 1
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<%- include('partials/footer.ejs') %>
