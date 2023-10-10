@@ -1,6 +1,6 @@
 require("dotenv").config();
 const http  = require('http');
-const ngrok = require("@ngrok/ngrok");
+// const ngrok = require("@ngrok/ngrok");
 const User = require('./model/users');
 const Post = require('./model/posts');
 const Chat = require('./model/chat');
@@ -87,10 +87,11 @@ passport.use(new GoogleStrategy({
     },
     function(accessToken, refreshToken, profile, cb) {
         User.findOrCreate({ googleId: profile.id }, function (err, user) {
-          User.find({appUsername: profile.name.givenName}).then(function(found) {
 
+                // function to set a default app username
+          User.find({appUsername: profile.name.givenName}).then(function(found) {
             if (user.appUsername) {
-              console.log("This account is already registered")
+              console.log("this account has already been registered and has a appUsername")
             }else{
               if (found.length > 0) {
                 let newName = (profile.name.givenName) + (Math.floor((Math.random() * 100)+ 1)).toString();
@@ -100,11 +101,10 @@ passport.use(new GoogleStrategy({
                 user.appUsername = profile.name.givenName;
                 user.save();
               }
-              console.log("new account created")
+              console.log("new account created and/or appUsername added")
             }
+          });
 
-
-          })
           return cb(err, user);
         })
       }
@@ -120,6 +120,24 @@ passport.use(new FacebookStrategy({
   },
   function(accessToken, refreshToken, profile, cb) {
     User.findOrCreate({ facebookId: profile.id }, function (err, user) {
+
+      // function to set a default app username
+      User.find({appUsername: (profile.displayName).split(" ")[0]}).then(function(found){
+        if(user.appUsername){
+          console.log("this account has already been registered and has an appUsername")
+        }else{
+          if (found.length>0) {
+            let newName = ((profile.displayName).split(" ")[0]) + (Math.floor((Math.random() * 100)+ 1)).toString();
+            user.appUsername = newName;
+            user.save()
+          } else {
+            user.appUsername = (profile.displayName).split(" ")[0];
+            user.save();
+          }
+          console.log("new account created and/or appUsername added")
+        }
+      });
+
       return cb(err, user);
     });
 
@@ -136,6 +154,24 @@ passport.use(new TwitterStrategy({
   
   function(token, tokenSecret, profile, cb) {
     User.findOrCreate({ twitterId: profile.id }, function (err, user) {
+
+      // function to set a default app username
+      User.find({appUsername: profile._json.screen_name}).then(function(found){
+        if (user.appUsername) {
+          console.log("this account has already been registered and has an appUsername")
+        } else {
+          if (found.length>0) {
+            let newName = (profile._json.screen_name) + (Math.floor((Math.random() * 100)+ 1)).toString();
+            user.appUsername = newName;
+            user.save();
+          } else {
+            user.appUsername = profile._json.screen_name;
+            user.save();
+          }
+          console.log("new account created and/or appUsername added")
+        }
+      })
+
       return cb(err, user);
     
     });
@@ -234,8 +270,16 @@ app.post('/signup', function(req, res){
 
           try {
           User.findById(req.user.id).then(function(foundUser){
-          foundUser.appUsername = username;
-          foundUser.save();
+            User.find({appUsername: username}).then(function(found){
+              if (found.length>0) {
+                foundUser.appUsername = username + (Math.floor((Math.random() * 100)+ 1)).toString();
+                foundUser.save();
+              } else {
+                foundUser.appUsername = username;
+                foundUser.save();
+              }
+            })
+
           });
 
           } catch (error) {
