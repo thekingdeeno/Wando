@@ -410,7 +410,9 @@ app.post('/messages', function(req, res){
 
 
 app.get('/chat/:searchParam', function(req, res){
-Chat.find({"users.userId": (req.user).id, "users.userId": req.params.searchParam}).then(function(foundChat){
+Chat.find({$and: [{"users.userId":(req.user).id},{"users.userId": req.params.searchParam}]}).then(function(foundChat){
+  // console.log(foundChat)
+
   if (foundChat.length===0){
 
     User.findById((req.user).id).then(function(user1) {
@@ -430,7 +432,8 @@ Chat.find({"users.userId": (req.user).id, "users.userId": req.params.searchParam
           
       ]
     })
-    chat.save().then(res.redirect(`/chat/${req.params.searchParam}`)).catch(err=>{console.log(err)})
+    chat.save()
+    // .then(res.redirect(`/chat/${req.params.searchParam}`)).catch(err=>{console.log(err)})
       });
     });
 
@@ -458,8 +461,7 @@ app.post("/chat", function(req, res){
   const message = req.body.message;
   const sender = req.body.sender;
   const recipient = req.body.recipient;
-
-  Chat.find({"users.userId": (req.user).id, "users.userId": req.body.recipientId}).then(function(foundChat){
+  Chat.find({$and: [{"users.userId":(req.user).id},{"users.userId": req.body.recipientId}]}).then(function(foundChat){
     
     foundChat[0].messages.push({
       authorName: req.body.senderName,
@@ -475,6 +477,7 @@ app.post("/chat", function(req, res){
 })
 
 // -------------- Testing Area ------------------
+
 
 
 //--------------- Testing Area ------------------
