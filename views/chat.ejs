@@ -20,8 +20,13 @@
 
     </div>
     <% (chatData.messages).forEach(message => { %>
-            <div class="">
-                <p><%= message.authorName %>: <%= message.text %></p>
+        <% if ((message.authorId).toString() === (senderData._id).toString()) { %>
+            <div id="db-chat" style="text-align: right;">
+        <% }else{ %>
+            <div id="db-chat" style="text-align: left;"></div>
+        <% } %> 
+            
+                <p><%= message.authorName %>: <%= message.text %>  <em><%= (message.sentAt).toLocaleTimeString(); %></em></p>
             </div>
     <% }) %>
     <div id="chat">
@@ -43,6 +48,18 @@
                 <button id="send"><i class="fa-solid fa-paper-plane"></i>send</button>
         </div>
 </div>
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 <script>

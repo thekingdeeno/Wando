@@ -16,14 +16,19 @@ const { ObjectId } = require("mongodb");
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const FacebookStrategy = require('passport-facebook').Strategy;
 const TwitterStrategy = require('passport-twitter').Strategy;
+// routing func setup
+const router = express.Router();
 
 
 const app = express();
 
 // Local Server Setup
-const server = app.listen(3000, function(){
-  console.log("server running on port 3000")
+const server = app.listen(process.env.PORT, function(){
+  console.log(`Wando app server running on ${process.env.PORT}`)
 });
+// I'm exporting the "server" variable to use in websocket functions within routes
+module.exports = server;
+
 
 app.use(express.static("public"));
 app.set("view engine", "ejs");
@@ -41,12 +46,6 @@ app.use(session({
 
 app.use(passport.initialize());
 app.use(passport.session());
-
-// Local Server Setup
-// const server = app.listen(process.env.PORT, function(){
-//   console.log(`Wando app server running on ${process.env.PORT}`);
-// }); 
-
 
 
 
@@ -198,50 +197,9 @@ passport.use(new TwitterStrategy({
 
 
 
-
-
-
-
-// GOOGLE AUTHOURIZATION REGISTRATION ROUTE
-app.get("/auth/google", passport.authenticate('google', {scope: ["profile"]}));
-
-// GOOGLE AUTHOURIZATION CALLBACK ROUTE
-app.get("/auth/google/wando",
-      passport.authenticate('google', {failureRedirect:"/register"}),
-      function(req, res){
-        res.redirect("/home")
-      }
-)
-
-
-
-// FACEBOOK AUTHOURIZATION REGISTRATION ROUTE
-app.get('/auth/facebook',
-  passport.authenticate('facebook'));
-
-// FACEBOOK AUTHOURIZATION CALLBACK ROUTE
-app.get('/auth/facebook/wando',
-  passport.authenticate('facebook', { failureRedirect: '/register' }),
-  function(req, res) {
-    // Successful authentication, redirect home.
-    res.redirect('/home');
-  });
-
-
-
-
-// TWITTER AUTHOURIZATION REGISTRATION ROUTE
-app.get('/auth/twitter',
-  passport.authenticate('twitter'));
-
-// TWITTER AUTHOURIZATION CALLBACK ROUTE
-app.get('/auth/twitter/wando', 
-  passport.authenticate('twitter', { failureRedirect: '/register' }),
-  function(req, res) {
-    // Successful authentication, redirect home.
-    res.redirect('/home');
-  });
-
+// ------THIRD-PARTY APPS AUTH REGISTRATION ROUTES ---- //
+const authRoute =  require('./routes/auth');
+app.use('/auth', authRoute);
 
 
 
@@ -260,343 +218,43 @@ app.get("/register", function(req, res){
 
 
 // Sign Up Route
-app.get('/signup', function(req, res){
-    res.render('signup')
-});
-
-app.post('/signup', function(req, res){
-
-  User.register({username: req.body.username,}, req.body.password, function(err, user){
-    if (err) {
-      console.log(err);
-      res.redirect('/register');
-    } else {
-      passport.authenticate('local')(req, res, function(){
-        res.redirect('/home');
-
-        async function defaultUsername(){
-
-          const email = req.body.username;
-
-          const username = (email.split("@"[0]))[0];
-
-
-          try {
-          User.findById(req.user.id).then(function(foundUser){
-            User.find({appUsername: username}).then(function(found){
-              if (found.length>0) {
-                foundUser.appUsername = username + (Math.floor((Math.random() * 100)+ 1)).toString();
-                foundUser.save();
-              } else {
-                foundUser.appUsername = username;
-                foundUser.save();
-              }
-            })
-
-          });
-
-          } catch (error) {
-          console.error(error)
-          };
-        };
-          defaultUsername().catch(console.error);
-      });
-    };
-  });
-
-});
-
+const signupRoute = require('./routes/signup');
+app.use('/signup', signupRoute);
 
 
 // Log In Route
-app.get('/login', function(req, res){
-    res.render('login');
-});
-
-app.post('/login', function(req, res){
-
-    const user = new User ({
-        username: req.body.username,
-        password: req.body.password,
-    })
-
-        req.login(user, function(err){
-        if(err){
-            console.log(err);
-        } else {
-            passport.authenticate('local')(req, res, function(){
-                res.redirect('/home');
-            });
-        };
-    });
-});
-
+const loginRoute = require('./routes/login');
+app.use('/login', loginRoute);
 
 
 // Homepage Route
-app.get('/home', function(req, res){
-    if (req.isAuthenticated()) {
+const homepageRoute = require('./routes/homepage');
+app.use('/home', homepageRoute);
 
-      
-      Post.find().then(function(posts){
-        res.render('home', {
-          postArray: posts.reverse(),
-        });
 
-      }).catch(err=>{
-        console.log(err);
-      });
-    } else {
-        res.redirect('register');
-    };
-});
+// Post Upload Route
+const postRoute = require('./routes/post');
+app.use('/upload', postRoute);
 
 
-// Post Route
-app.get('/upload', function(req, res){
+// Messages Route
+const messagesRoute = require('./routes/messages');
+app.use('/messages', messagesRoute);
 
-  if (req.isAuthenticated()) {
-    res.render('upload')
-  } else {
-    res.redirect('register');
-  };
-});
 
-app.post('/upload', function(req, res){
+// Chatroom Route
+const chatroomRoute = require('./routes/chatroom');
+app.use('/chat', chatroomRoute);
 
 
+// -------------- Testing Area (begining) ------------------
 
-  User.findById((req.user).id).then(function(foundUser){
-    const post = new Post({
-    title: req.body.title,
-    content: req.body.content,
-    authorId: (req.user).id,
-    authorUsername: foundUser.appUsername,
-  });
+//--------------- Testing Area (ending) ------------------
 
-    post.save().then(function(){
-      res.redirect('/home');
-    }).catch(err=>{
-      console.log(err);
-    })
-    foundUser.posts.push(post._id);
-    foundUser.save();
 
-  });
-  
-  
 
-});
 
-
-app.get('/messages', function(req, res){
-  if (req.isAuthenticated()){
-    Chat.find({"users.userId": (req.user).id,"messages": {$exists: true,$not: {$size: 0}}}).then(function(foundChats){
-
-    User.findById((req.user).id).then((found) =>{
-      res.render('messages', {
-        myObjId: found._id,
-        myId: (req.user).id,
-        myUsername: found.appUsername,
-        chats: foundChats,
-      });            
-    });
-
-
-    }).catch(err=>{
-      console.log(err);
-    });
-
-  }else{
-    res.redirect('/register')
-  };
-});
-
-app.post('/messages', function(req, res){
-  User.find({appUsername: req.body.search}).then(function(searchResult){
-
-    res.render('chatsearchresult',{
-      foundUser : searchResult,
-    });
-  });
-});
-
-
-app.get('/chat/:searchParam', function(req, res){
-
-  const chatCall = (req.params.searchParam).slice(0,7)
-  if (chatCall === "newChat") {
-
-    const userSearchId = (req.params.searchParam).slice(7,31)
-    console.log();
-
-    Chat.find({$and: [{"users.userId":(req.user).id},{"users.userId": userSearchId}]}).then(function(foundChat){
-      
-      if (foundChat.length===0) {
-
-      User.findById((req.user).id).then(function(user1) {
-        User.findById(userSearchId).then(function(user2) {
-          
-          const chat = new Chat({
-            type: "private",
-            users: [
-              {
-                userName: user1.appUsername,
-                userId: (req.user).id,
-              },
-              {
-                userName: user2.appUsername,
-                userId: userSearchId,
-              }
-                
-            ]
-          })
-        chat.save(res.redirect(`/chat/${(chat._id).toString()}`))
-        });
-      });
-
-      } else {
-
-        res.redirect(`/chat/${(foundChat[0]._id).toString()}`)
-
-      }
-
-    })
-
-  }else{
-
-    const chatUrl = req.params.searchParam
-
-      Chat.findById(req.params.searchParam).then(function(foundChat){
-
-        const userArray = foundChat.users;
-        userArray.forEach(user => {
-          if ((user.userId).toString() != (req.user).id) {
-
-          async function userDetails(){
-            const primaryUser = await User.findById((req.user).id);
-            const secondaryUser = await User.findById(user.userId);
-
-              res.render('chat', {
-              chatData : foundChat,
-              senderData : primaryUser,
-              recipientData: secondaryUser,
-              wssConnect: chatUrl,
-            });
-          };
-
-        userDetails();
-          }
-        });
-
-      })
-      
-  };
-});
-
-
-    // WebSocket Setup for chat (Socket.io)
-    const io = socket(server, {
-      transports: ["websocket","webtransport"],
-      addTrailingSlash: false,
-    });
-
-    io.on('connection', function(socket){
-    console.log("made socket connection on "+ socket.id)
-
-    // Send message to specific chatroom
-    socket.on("chat-room", function(data){
-      socket.join(data)
-    })
-
-    // User is typing notification
-    socket.on('typing',function(data){
-      socket.to(data.room).emit('typing', data)
-    })
-
-
-    // Using Websocket (Socket.io) instead of a Post route to send data to the database
-    socket.on('chat',function(data) {
-      console.log(data.room);
-      socket.to(data.room).emit('chat',data);
-
-
-      // send the recieved data into the Chat database
-      // Chat.find({$and: [{"users.userId":data.senderId},{"users.userId": data.recipientId}]}).then(function(foundChat){
-
-        Chat.findById(data.room).then(function(foundChat){
-
-        // })
-    
-        foundChat.messages.push({
-          authorName: data.senderName,
-          authorId: data.senderId,
-          recipientName: data.recipientName,
-          text: data.message,
-        });
-          foundChat.save();
-
-      });
-
-    });
-  
-    });
-
-
-
-
-
-
-
-app.post("/chat", function(req, res){
-  Chat.find({$and: [{"users.userId":(req.user).id},{"users.userId": req.body.recipientId}]}).then(function(foundChat){
-    
-    foundChat[0].messages.push({
-      authorName: req.body.senderName,
-      authorId: req.body.senderId,
-      text: req.body.message,
-    });
-
-      foundChat[0].save()
-  });
-
-})
-
-// -------------- Testing Area ------------------
-
-
-
-//--------------- Testing Area ------------------
-
-
-
-
-
-// Local Server Setup
-// httpServer.listen(3000, function(){
-//   console.log("server running on port 3000")
-// });
-// app.listen(3000, function(){
-//   console.log("Server started on port 3000");
-// });
-
-
-
-// Socket.io Setup
-// const io = socket(server);
-
-// io.on('connection', function(socket){
-//   console.log("made socket connection")
-//   console.log(socket.id)
-
-//   socket.on('chat', function(data){
-//     io.sockets.emit('chat', data);
-//   })
-// });
-
-
-
-// Ngrok Server Setup
+// Ngrok Server Setup (reminder: remove Ngrok before launching this website)
 async function startNgrok (){
   const url = await ngrok.connect({ addr: 3000, authtoken_from_env: true });
   console.log(`Ingress established at: ${url}`);
