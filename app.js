@@ -1,24 +1,29 @@
 require("dotenv").config();
-const http  = require('http');
-// const ngrok = require("@ngrok/ngrok");
+const express = require('express');
+const socket = require('socket.io');
+const ngrok = require("@ngrok/ngrok");
 const User = require('./model/users');
 const Post = require('./model/posts');
 const Chat = require('./model/chat');
-const express = require("express");
-const bodyParser = require("body-parser");
+const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
-const mongodb = require('mongodb')
-const findOrCreate = require("mongoose-findorcreate");
+const mongodb = require('mongodb');
+const findOrCreate = require('mongoose-findorcreate');
 const session = require('express-session');
 const passport = require('passport');
 const passportLocalMongoose = require('passport-local-mongoose');
 const { ObjectId } = require("mongodb");
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
-const FacebookStrategy = require("passport-facebook").Strategy;
+const FacebookStrategy = require('passport-facebook').Strategy;
 const TwitterStrategy = require('passport-twitter').Strategy;
 
 
 const app = express();
+
+// Local Server Setup
+const server = app.listen(3000, function(){
+  console.log("server running on port 3000")
+});
 
 app.use(express.static("public"));
 app.set("view engine", "ejs");
@@ -31,11 +36,19 @@ app.use(session({
   secret: 'keyboard cat',
   resave: false,
   saveUninitialized: false,
-  cookie: { secure: false }
+  cookie: { secure: false },
 }));
 
 app.use(passport.initialize());
 app.use(passport.session());
+
+// Local Server Setup
+// const server = app.listen(process.env.PORT, function(){
+//   console.log(`Wando app server running on ${process.env.PORT}`);
+// }); 
+
+
+
 
 
 
@@ -401,7 +414,7 @@ app.get('/messages', function(req, res){
 
 app.post('/messages', function(req, res){
   User.find({appUsername: req.body.search}).then(function(searchResult){
-    // console.log(searchResult)
+
     res.render('chatsearchresult',{
       foundUser : searchResult,
     });
@@ -410,57 +423,132 @@ app.post('/messages', function(req, res){
 
 
 app.get('/chat/:searchParam', function(req, res){
-Chat.find({$and: [{"users.userId":(req.user).id},{"users.userId": req.params.searchParam}]}).then(function(foundChat){
-  // console.log(foundChat)
 
-  if (foundChat.length===0){
+  const chatCall = (req.params.searchParam).slice(0,7)
+  if (chatCall === "newChat") {
 
-    User.findById((req.user).id).then(function(user1) {
-      User.findById(req.params.searchParam).then(function(user2) {
-        
-    const chat = new Chat({
-      type: "private",
-      users: [
-        {
-          userName: user1.appUsername,
-          userId: (req.user).id,
-        },
-        {
-          userName: user2.appUsername,
-          userId: req.params.searchParam,
-        }
+    const userSearchId = (req.params.searchParam).slice(7,31)
+    console.log();
+
+    Chat.find({$and: [{"users.userId":(req.user).id},{"users.userId": userSearchId}]}).then(function(foundChat){
+      
+      if (foundChat.length===0) {
+
+      User.findById((req.user).id).then(function(user1) {
+        User.findById(userSearchId).then(function(user2) {
           
-      ]
+          const chat = new Chat({
+            type: "private",
+            users: [
+              {
+                userName: user1.appUsername,
+                userId: (req.user).id,
+              },
+              {
+                userName: user2.appUsername,
+                userId: userSearchId,
+              }
+                
+            ]
+          })
+        chat.save(res.redirect(`/chat/${(chat._id).toString()}`))
+        });
+      });
+
+      } else {
+
+        res.redirect(`/chat/${(foundChat[0]._id).toString()}`)
+
+      }
+
     })
-    chat.save()
-    // .then(res.redirect(`/chat/${req.params.searchParam}`)).catch(err=>{console.log(err)})
-      });
-    });
 
-          
-  } else {
+  }else{
 
-    async function userDetails(){
-      const primaryUser = await User.findById((req.user).id);
-      const secondaryUser = await User.findById(req.params.searchParam);
+    const chatUrl = req.params.searchParam
 
-        res.render('chat', {
-        chatData : foundChat,
-        senderData : primaryUser,
-        recipientData: secondaryUser
-      });
-    };
+      Chat.findById(req.params.searchParam).then(function(foundChat){
 
-    userDetails();
+        const userArray = foundChat.users;
+        userArray.forEach(user => {
+          if ((user.userId).toString() != (req.user).id) {
 
+          async function userDetails(){
+            const primaryUser = await User.findById((req.user).id);
+            const secondaryUser = await User.findById(user.userId);
+
+              res.render('chat', {
+              chatData : foundChat,
+              senderData : primaryUser,
+              recipientData: secondaryUser,
+              wssConnect: chatUrl,
+            });
+          };
+
+        userDetails();
+          }
+        });
+
+      })
+      
   };
 });
-});
+
+
+    // WebSocket Setup for chat (Socket.io)
+    const io = socket(server, {
+      transports: ["websocket","webtransport"],
+      addTrailingSlash: false,
+    });
+
+    io.on('connection', function(socket){
+    console.log("made socket connection on "+ socket.id)
+
+    // Send message to specific chatroom
+    socket.on("chat-room", function(data){
+      socket.join(data)
+    })
+
+    // User is typing notification
+    socket.on('typing',function(data){
+      socket.to(data.room).emit('typing', data)
+    })
+
+
+    // Using Websocket (Socket.io) instead of a Post route to send data to the database
+    socket.on('chat',function(data) {
+      console.log(data.room);
+      socket.to(data.room).emit('chat',data);
+
+
+      // send the recieved data into the Chat database
+      // Chat.find({$and: [{"users.userId":data.senderId},{"users.userId": data.recipientId}]}).then(function(foundChat){
+
+        Chat.findById(data.room).then(function(foundChat){
+
+        // })
+    
+        foundChat.messages.push({
+          authorName: data.senderName,
+          authorId: data.senderId,
+          recipientName: data.recipientName,
+          text: data.message,
+        });
+          foundChat.save();
+
+      });
+
+    });
+  
+    });
+
+
+
+
+
+
 
 app.post("/chat", function(req, res){
-  const message = req.body.message;
-  const sender = req.body.sender;
-  const recipient = req.body.recipient;
   Chat.find({$and: [{"users.userId":(req.user).id},{"users.userId": req.body.recipientId}]}).then(function(foundChat){
     
     foundChat[0].messages.push({
@@ -469,10 +557,8 @@ app.post("/chat", function(req, res){
       text: req.body.message,
     });
 
-
-      foundChat[0].save(res.redirect("/chat/"+req.body.recipientId))
-    
-  })
+      foundChat[0].save()
+  });
 
 })
 
@@ -484,14 +570,36 @@ app.post("/chat", function(req, res){
 
 
 
+
+
 // Local Server Setup
-app.listen(process.env.PORT, function(){
-    console.log(`Wando app server running on ${process.env.PORT}`);
-});
+// httpServer.listen(3000, function(){
+//   console.log("server running on port 3000")
+// });
+// app.listen(3000, function(){
+//   console.log("Server started on port 3000");
+// });
+
+
+
+// Socket.io Setup
+// const io = socket(server);
+
+// io.on('connection', function(socket){
+//   console.log("made socket connection")
+//   console.log(socket.id)
+
+//   socket.on('chat', function(data){
+//     io.sockets.emit('chat', data);
+//   })
+// });
+
 
 
 // Ngrok Server Setup
-// (async function () {
-//   const url = await ngrok.connect({ addr: 3000, authtoken_from_env: true });
-//   console.log(`Ingress established at: ${url}`);
-// })();
+async function startNgrok (){
+  const url = await ngrok.connect({ addr: 3000, authtoken_from_env: true });
+  console.log(`Ingress established at: ${url}`);
+};
+
+// startNgrok()

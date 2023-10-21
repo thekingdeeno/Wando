@@ -30,6 +30,14 @@ const userSchema = new mongoose.Schema ({
     chats: [{
         type: SchemaTypes.ObjectId,
         ref: 'Chat'
+    }],
+    following:[{
+        type: SchemaTypes.ObjectId,
+        ref: 'User'
+    }],
+    followers: [{
+        type: SchemaTypes.ObjectId,
+        ref: 'User'
     }]
 
 });
