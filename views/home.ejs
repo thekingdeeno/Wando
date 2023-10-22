@@ -9,10 +9,10 @@
                 <a href="/home"><i class="fa-solid fa-house"></i>Home</a>
             </div>
             <div class="tab-btn">
-                <a href="http://"><i class="fa-solid fa-magnifying-glass"></i>Discover</a>
+                <a href="/Discover"><i class="fa-solid fa-magnifying-glass"></i>Discover</a>
             </div>
             <div class="tab-btn">
-                <a href="http://"><i class="fa-solid fa-fire"></i>Camps</a>
+                <a href="/camps"><i class="fa-solid fa-fire"></i>Camps</a>
             </div>
             <div class="tab-btn">
                 <a href="/messages"><i class="fa-regular fa-envelope"></i>Messages</a>
@@ -24,7 +24,7 @@
                 <a href="/upload"><i class="fa-solid fa-plus"></i>Post</a>
             </div>
             <div class="tab-btn">
-                <a href="/profile"><i class="fa-regular fa-user"></i>Profile</a>
+                <a href="/profile/<%=thisUser.appUsername%>"><i class="fa-regular fa-user"></i>Profile</a>
             </div>
         </div>
         <div id="more-options">
@@ -66,10 +66,10 @@
                 <i class="fa-regular fa-share-from-square"></i>
             </li>
             <li class="list-group-item">
-                <a href= "postname/likes"><%= post.likes.length  %> Likes</a>
+                <a href= "/postname/likes"><%= post.likes.length  %> Likes</a>
                 <!-- <p class="post-caption"><a href="/profile">user_name</a> Lorem ipsum dolor sit</p> -->
 
-                <p class="post-comments"><a href="/postname/comments"><%= post.comments.length %> users commented</a></p>
+                <p class="post-comments"><a href="postname/comments"><%= post.comments.length %> users commented</a></p>
 
                 <% (post.comments).forEach(comment => { %>
                 <p><a href="/profile"><%= comment.appUsername %></a> <%= comment.content %>.  <%= comment.likes %> Likes</p>
@@ -148,7 +148,7 @@
         </div>
         <div id="friends-tab">
             <div>
-                <h3>Friends</h3> <a href="/myfrieands">more</a>
+                <h3>Friends</h3> <a href="/myfriends">more</a>
             </div>
             <div id="friends-list">
                 <ul>

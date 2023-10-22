@@ -20,29 +20,34 @@ const TwitterStrategy = require('passport-twitter').Strategy;
 const router = express.Router();
 
 
-router.get('/', function(req, res){
-    if (req.isAuthenticated()) {
+router.get('/:searchParam', function(req, res){
 
-      User.findById((req.user).id).then(foundUser=>{
+    async function renderProfile(){
+        const viewerData = await User.findById((req.user).id);
+        const profileData = await User.findOne({appUsername: req.params.searchParam});
 
-        Post.find().then(function(posts){
+        try {
+            const userPosts = await Post.find({authorId: profileData._id});
 
-          res.render('home', {
-            thisUser: foundUser,
-            postArray: posts.reverse(),
-          });
 
-        }).catch(err=>{
-          console.log(err);
-        });
+            res.render('profile',{
+                postArray: userPosts,
+                profileInfo: profileData,
+                viewerInfo: viewerData,
+            });
+        } catch (error) {
+            res.send("<h1>Error: User Not Found</h1><p>Sorry this User doesn't exist or had deleted thier account</p>");
+            alert('Error');
+            console.log(error)
+        };
 
-      })
-
-      
-
-    } else {
-        res.redirect('register');
     };
+
+    renderProfile();
+
 });
+
+
+
 
 module.exports = router;

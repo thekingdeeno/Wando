@@ -246,10 +246,17 @@ app.use('/messages', messagesRoute);
 const chatroomRoute = require('./routes/chatroom');
 app.use('/chat', chatroomRoute);
 
+// Profile Route
+const profileRoute = require('./routes/profile');
+app.use('/profile', profileRoute);
+
+
+
+
 
 // -------------- Testing Area (begining) ------------------
 
-//--------------- Testing Area (ending) ------------------
+//--------------- Testing Area (ending) --------------------
 
 
 
