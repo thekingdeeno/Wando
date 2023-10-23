@@ -99,50 +99,6 @@ router.get('/:searchParam', function(req, res){
 
 
 
-// WEBSOCKET SETUP FOR REALTIME CHAT ROOM (Socket.io)
-const io = socket(server, {
-transports: ["websocket","webtransport"],
-addTrailingSlash: false,
-});
-
-io.on('connection', function(socket){
-    console.log("made socket connection on "+ socket.id)
-
-    // Send message to specific chatroom
-    socket.on("chat-room", function(data){
-        socket.join(data)
-    })
-
-    // User is typing notification
-    socket.on('typing',function(data){
-        socket.to(data.room).emit('typing', data)
-    })
-
-
-    // Using Websocket (Socket.io) to send data to the database directly
-    socket.on('chat',function(data) {
-        socket.to(data.room).emit('chat',data);
-
-
-    // send the recieved data into the Chat database
-            Chat.findById(data.room).then(function(foundChat){
-
-            foundChat.messages.push({
-                authorName: data.senderName,
-                authorId: data.senderId,
-                recipientName: data.recipientName,
-                text: data.message,
-            });
-
-            foundChat.save();
-
-        });
-
-    });
-
-});
-
-
 
 //   router.post("/", function(req, res){
 //     Chat.find({$and: [{"users.userId":(req.user).id},{"users.userId": req.body.recipientId}]}).then(function(foundChat){

@@ -63,7 +63,7 @@
 
 
 <script>
-    const chatId = (document.getElementById("chatId")).value;
+const chatId = (document.getElementById("chatId")).value;
 
 // Query DOM
 const output = document.getElementById('chat');
@@ -87,7 +87,7 @@ const socket = io.connect("http://localhost:3000", {
 });
 
 // join room 
-socket.emit("chat-room", chatId)
+socket.emit("chat-room", chatId);
 
 
 // Emit Events 

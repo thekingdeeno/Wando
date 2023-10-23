@@ -1,0 +1,71 @@
+<%- include('partials/header.ejs') %>
+
+<h1>Discover</h1>
+
+<form action="/discover" method="post">
+    <div>
+        <input id="search-input" name="search" type="text" placeholder="Search">
+        <button id="submit-btn" type="submit">Search</button>
+    </div>
+</form>
+
+<div id="search-results">
+
+</div>
+
+
+
+
+
+
+
+<script>
+// Query DOM
+const searchInput = document.getElementById("search-input");
+const searchResults = document.getElementById("search-results")
+
+
+
+// Make Connection
+const socket = io.connect("http://localhost:3000", {
+    transports: ["websocket","webtransport"],
+    addTrailingSlash: false,
+});
+
+// Emit Events
+document.addEventListener('keyup', function(event){
+    if (event.target.matches('input')) {
+        
+        socket.emit('search',{
+            searchData: searchInput.value,
+        });
+
+    };
+});
+
+// Listen for emits from backend
+    socket.on('search-room', function(data){
+        socket.emit('search-room', data)
+    });
+
+    socket.on('appUsers', function(data){
+        console.log(data);
+        searchResults.innerHTML = ""
+        data.forEach(user => {
+            searchResults.innerHTML +=
+        "<div id=foundUser><p><a href=/profile/"+user.appUsername+">"+user.appUsername+"</a></p></div>"
+        });
+        if (data.length === 0) {
+            searchResults.innerHTML = ""
+        }
+        if (searchInput.value === ""){
+            searchResults.innerHTML = "";
+        }
+
+    })
+
+
+
+</script>
+
+<%- include('partials/footer.ejs') %>

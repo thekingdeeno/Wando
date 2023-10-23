@@ -251,7 +251,80 @@ const profileRoute = require('./routes/profile');
 app.use('/profile', profileRoute);
 
 
+// Discover Route
+const discoverRoute = require('./routes/discover');
+app.use('/discover', discoverRoute);
 
+
+
+
+// WEBSOCKET SETUP FOR REALTIME CHAT ROOM (Socket.io)
+
+const io = socket(server, {
+    transports: ["websocket","webtransport"],
+    addTrailingSlash: false,
+  });
+  
+  io.on('connection', function(socket){
+      console.log("made socket connection on "+ socket.id)
+  
+      // Send message to specific chatroom
+      socket.on("chat-room", function(data){
+          socket.join(data);
+      });
+  
+      // User is typing notification
+      socket.on('typing',function(data){
+          socket.to(data.room).emit('typing', data);
+      });
+  
+  
+      // Using Websocket (Socket.io) to send data to the database directly
+      socket.on('chat',function(data) {
+          socket.to(data.room).emit('chat',data);
+  
+  
+      // send the recieved data into the Chat database
+              Chat.findById(data.room).then(function(foundChat){
+  
+              foundChat.messages.push({
+                  authorName: data.senderName,
+                  authorId: data.senderId,
+                  recipientName: data.recipientName,
+                  text: data.message,
+              });
+  
+              foundChat.save();
+  
+          });
+  
+      });
+
+
+      // WEBSOCKET (Socket.io) SETUP FOR DICOVER SEARCH
+
+      socket.emit('search-room', {
+        room: socket.id,
+      });
+
+      // join default room
+      socket.join(socket.id)
+
+      // Listen for emits from backend
+      socket.on('search', function(data){
+        async function search(){
+          const appUsers = await User.find({appUsername: {$regex: "^"+data.searchData, $options: "mi"}});
+          socket.emit('appUsers', appUsers);
+
+          console.log(appUsers);
+        }
+        search()
+        
+      });
+
+
+  
+  });
 
 
 // -------------- Testing Area (begining) ------------------
