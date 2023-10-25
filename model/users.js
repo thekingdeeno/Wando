@@ -5,9 +5,9 @@ const passportLocalMongoose = require('passport-local-mongoose');
 // const passport = require('passport');
 
 const userSchema = new mongoose.Schema ({
-    username: String, // User login email
-    appUsername: String,
-    fullName: String,
+    email: String, // User login email (formerly "username")
+    username: String, // Username (formerly "username")
+    fullname: String,
     password: String,
     userImage: String,
 
@@ -42,7 +42,7 @@ const userSchema = new mongoose.Schema ({
 
 });
 
-userSchema.plugin(passportLocalMongoose);
+userSchema.plugin(passportLocalMongoose, { usernameField : 'email' });
 userSchema.plugin(findOrCreate);
 const User = new mongoose.model('User', userSchema);
 

@@ -43,11 +43,11 @@ router.get('/:searchParam', function(req, res){
               type: "private",
               users: [
                 {
-                  userName: user1.appUsername,
+                  userName: user1.username,
                   userId: (req.user).id,
                 },
                 {
-                  userName: user2.appUsername,
+                  userName: user2.username,
                   userId: userSearchId,
                 }
                   

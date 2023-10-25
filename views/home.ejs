@@ -24,7 +24,7 @@
                 <a href="/upload"><i class="fa-solid fa-plus"></i>Post</a>
             </div>
             <div class="tab-btn">
-                <a href="/profile/<%=thisUser.appUsername%>"><i class="fa-regular fa-user"></i>Profile</a>
+                <a href="/profile/<%=thisUser.username%>"><i class="fa-regular fa-user"></i>Profile</a>
             </div>
         </div>
         <div id="more-options">
@@ -72,7 +72,7 @@
                 <p class="post-comments"><a href="postname/comments"><%= post.comments.length %> users commented</a></p>
 
                 <% (post.comments).forEach(comment => { %>
-                <p><a href="/profile"><%= comment.appUsername %></a> <%= comment.content %>.  <%= comment.likes %> Likes</p>
+                <p><a href="/profile"><%= comment.username %></a> <%= comment.content %>.  <%= comment.likes %> Likes</p>
                 <% }) %>>
 
 
@@ -113,7 +113,7 @@
                         <p class="post-comments"><a href="/postname/comments"><%= post.comments.length %> users commented</a></p>
         
                         <% (post.comments).forEach(comment => { %>
-                        <p><a href="/profile/<%= comment.appUsername %> "><%= comment.appUsername %></a> <%= comment.content %>.  <%= comment.likes %> Likes</p>
+                        <p><a href="/profile/<%= comment.username %> "><%= comment.username %></a> <%= comment.content %>.  <%= comment.likes %> Likes</p>
                         <% }) %>>
         
         

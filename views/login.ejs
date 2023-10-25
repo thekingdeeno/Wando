@@ -4,20 +4,36 @@
 <p>Log in page</p>
 
 <div>
-<form action="/login" method="POST">
-    <div>
-        <input type="email" name="username" placeholder="Email">
-    </div>
-    <div>
-        <input type="password" name="password" placeholder="password">
-    </div>
+    <form action="/login" method="POST">
+        <div>
+            <input type="email" name="email" placeholder="Email">
+        </div>
+        <div>
+            <input type="password" name="password" placeholder="password">
+        </div>
+
+        <div>
+            <button class="btn btn-dark" type="submit">Log In</button>
+        </div>
+        
+    </form>
+
+        <h1>OR</h1>
 
     <div>
-        <button class="btn btn-dark" type="submit">Log In</button>
+        <div class="card-body">
+            <a class="btn btn-block btn-social btn-google" href="/auth/google"><i class="fab fa-google"></i>Log In with Google</a>
+        </div>
+        <div class="card-body">
+            <a class="btn btn-block btn-social btn-facebook" href="/auth/facebook"><i class="fab fa-facebook"></i>Log In with Facebook</a>
+        </div>
+        <div class="card-body">
+            <a class="btn btn-block btn-social btn-twitter" href="/auth/twitter"><i class="fab fa-twitter"></i>Log In with twitter</a>
+        </div>
     </div>
-    
-</form>
 </div>
+
+
 
 
 <%- include('partials/footer.ejs') %>

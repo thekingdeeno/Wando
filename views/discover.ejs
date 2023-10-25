@@ -53,7 +53,7 @@ document.addEventListener('keyup', function(event){
         searchResults.innerHTML = ""
         data.forEach(user => {
             searchResults.innerHTML +=
-        "<div id=foundUser><p><a href=/profile/"+user.appUsername+">"+user.appUsername+"</a></p></div>"
+        "<div id=foundUser><p><a href=/profile/"+user.username+">"+user.username+"</a></p></div>"
         });
         if (data.length === 0) {
             searchResults.innerHTML = ""

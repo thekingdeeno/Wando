@@ -28,7 +28,7 @@ router.get('/', function(req, res){
         res.render('messages', {
           myObjId: found._id,
           myId: (req.user).id,
-          myUsername: found.appUsername,
+          myUsername: found.username,
           chats: foundChats,
         });            
       });
@@ -44,7 +44,7 @@ router.get('/', function(req, res){
   });
   
   router.post('/', function(req, res){
-    User.find({appUsername: req.body.search}).then(function(searchResult){
+    User.find({username: req.body.search}).then(function(searchResult){
   
       res.render('chatsearchresult',{
         foundUser : searchResult,

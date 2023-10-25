@@ -20,12 +20,14 @@ const TwitterStrategy = require('passport-twitter').Strategy;
 const router = express.Router();
 
 router.get('/', function(req, res){
-    res.render('signup')
+    res.render('signup',{
+      allUser: User.find(),
+    })
 });
 
 router.post('/', function(req, res){
 
-  User.register({username: req.body.username,}, req.body.password, function(err, user){
+  User.register({email: req.body.email,}, req.body.password, function(err, user){
     if (err) {
       console.log(err);
       res.redirect('/register');
@@ -33,32 +35,19 @@ router.post('/', function(req, res){
       passport.authenticate('local')(req, res, function(){
         res.redirect('/home');
 
-        async function defaultUsername(){
+        async function setUserData(){
 
-          const email = req.body.username;
+          // const username = (email.split("@"[0]))[0];
 
-          const username = (email.split("@"[0]))[0];
+          const foundUser = await User.findById(req.user.id);
 
+            foundUser.fullname = req.body.fullname;
+            foundUser.username = req.body.username;
 
-          try {
-          User.findById(req.user.id).then(function(foundUser){
-            User.find({appUsername: username}).then(function(found){
-              if (found.length>0) {
-                foundUser.appUsername = username + (Math.floor((Math.random() * 100)+ 1)).toString();
-                foundUser.save();
-              } else {
-                foundUser.appUsername = username;
-                foundUser.save();
-              }
-            })
+            foundUser.save();
 
-          });
-
-          } catch (error) {
-          console.error(error)
-          };
         };
-          defaultUsername().catch(console.error);
+          setUserData()
       });
     };
   });

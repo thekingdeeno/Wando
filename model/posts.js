@@ -21,14 +21,14 @@ const postSchema = new Schema({
             type: SchemaTypes.ObjectId,
             ref: 'User',            
         },
-        appUsername: String,
+        username: String,
     }],
     comments: [{
         userId: {
             type: SchemaTypes.ObjectId,
             ref: 'User',
         },
-        appUsername: String,
+        username: String,
         content: String,
         likes: Number,
     }]

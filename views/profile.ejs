@@ -41,7 +41,7 @@
 
         <img id="user-dp" src="/images/ceo.jpg" alt="">
         <h1>Full Name</h1>
-        <p>@<%=profileInfo.appUsername%></p>
+        <p>@<%=profileInfo.username%></p>
         <% if (profileInfo.bio) { %>
             <p><%=profileInfo.bio%></p>         
         <% } %>
@@ -92,7 +92,7 @@
                     <p class="post-comments"><a href="/postname/comments"><%= post.comments.length %> users commented</a></p>
     
                     <% (post.comments).forEach(comment => { %>
-                    <p><a href="/profile"><%= comment.appUsername %></a> <%= comment.content %>.  <%= comment.likes %> Likes</p>
+                    <p><a href="/profile"><%= comment.username %></a> <%= comment.content %>.  <%= comment.likes %> Likes</p>
                     <% }) %>>
     
     
@@ -133,7 +133,7 @@
                             <p class="post-comments"><a href="/postname/comments"><%= post.comments.length %> users commented</a></p>
             
                             <% (post.comments).forEach(comment => { %>
-                            <p><a href="/profile/<%= comment.appUsername %> "><%= comment.appUsername %></a> <%= comment.content %>.  <%= comment.likes %> Likes</p>
+                            <p><a href="/profile/<%= comment.username %> "><%= comment.username %></a> <%= comment.content %>.  <%= comment.likes %> Likes</p>
                             <% }) %>>
             
             

@@ -24,7 +24,7 @@ router.get('/:searchParam', function(req, res){
 
     async function renderProfile(){
         const viewerData = await User.findById((req.user).id);
-        const profileData = await User.findOne({appUsername: req.params.searchParam});
+        const profileData = await User.findOne({username: req.params.searchParam});
 
         try {
             const userPosts = await Post.find({authorId: profileData._id});

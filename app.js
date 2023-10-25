@@ -101,19 +101,19 @@ passport.use(new GoogleStrategy({
         User.findOrCreate({ googleId: profile.id }, function (err, user) {
 
                 // function to set a default app username
-          User.find({appUsername: profile.name.givenName}).then(function(found) {
-            if (user.appUsername) {
-              console.log("this account has already been registered and has a appUsername")
+          User.find({username: profile.name.givenName}).then(function(found) {
+            if (user.username) {
+              console.log("this account has already been registered and has a username")
             }else{
               if (found.length > 0) {
                 let newName = (profile.name.givenName) + (Math.floor((Math.random() * 100)+ 1)).toString();
-                user.appUsername = newName;
+                user.username = newName;
                 user.save();
               } else {
-                user.appUsername = profile.name.givenName;
+                user.username = profile.name.givenName;
                 user.save();
               }
-              console.log("new account created and/or appUsername added")
+              console.log("new account created and/or username added")
             }
           });
 
@@ -134,19 +134,19 @@ passport.use(new FacebookStrategy({
     User.findOrCreate({ facebookId: profile.id }, function (err, user) {
 
       // function to set a default app username
-      User.find({appUsername: (profile.displayName).split(" ")[0]}).then(function(found){
-        if(user.appUsername){
-          console.log("this account has already been registered and has an appUsername")
+      User.find({username: (profile.displayName).split(" ")[0]}).then(function(found){
+        if(user.username){
+          console.log("this account has already been registered and has an username")
         }else{
           if (found.length>0) {
             let newName = ((profile.displayName).split(" ")[0]) + (Math.floor((Math.random() * 100)+ 1)).toString();
-            user.appUsername = newName;
+            user.username = newName;
             user.save()
           } else {
-            user.appUsername = (profile.displayName).split(" ")[0];
+            user.username = (profile.displayName).split(" ")[0];
             user.save();
           }
-          console.log("new account created and/or appUsername added")
+          console.log("new account created and/or username added")
         }
       });
 
@@ -168,19 +168,19 @@ passport.use(new TwitterStrategy({
     User.findOrCreate({ twitterId: profile.id }, function (err, user) {
 
       // function to set a default app username
-      User.find({appUsername: profile._json.screen_name}).then(function(found){
-        if (user.appUsername) {
-          console.log("this account has already been registered and has an appUsername")
+      User.find({username: profile._json.screen_name}).then(function(found){
+        if (user.username) {
+          console.log("this account has already been registered and has an username")
         } else {
           if (found.length>0) {
             let newName = (profile._json.screen_name) + (Math.floor((Math.random() * 100)+ 1)).toString();
-            user.appUsername = newName;
+            user.username = newName;
             user.save();
           } else {
-            user.appUsername = profile._json.screen_name;
+            user.username = profile._json.screen_name;
             user.save();
           }
-          console.log("new account created and/or appUsername added")
+          console.log("new account created and/or username added")
         }
       })
 
@@ -267,7 +267,68 @@ const io = socket(server, {
   
   io.on('connection', function(socket){
       console.log("made socket connection on "+ socket.id)
+
+
+
+
+
+  // WEBSOCKET SETUP FOR SIGNUP ROUTE
+
+  // join default room for user 
+    socket.join(socket.id);
+
+
+    // function to check form credentials
+    socket.on('signupFormCheck',function(data){
+      async function validateForm(){
+        const emailCheck = await User.find({email: data.email});
+        const usernameCheck = await User.find({username: data.username});
+
+        if (emailCheck.length===0 && usernameCheck.length===0) {
+          // console.log("valid")
+          socket.emit('signupFormCheck', {
+            status: "valid"
+          });
+        } else {
+          // console.log("invalid")
+          socket.emit('signupFormCheck', {
+            status: "invalid",
+            emailError: emailCheck.length,
+            usernameError: usernameCheck.length,
+          });
+        };
+      };
+
+      validateForm();
+
+    });
+
+    // function to tell user if username alredy exists 
+    socket.on('createUsername', function(data) {
+      // console.log(data.newUsername)
+
+      async function checkUsername() {
+      const allUsernames = await User.find({username: data.newUsername})
+        if (allUsernames.length===0) {
+          socket.emit('createUsername', "available")
+        } else {
+          socket.emit('createUsername', "unavailable")
+        };
+      };
+      checkUsername();
+    });
   
+
+
+
+
+
+
+
+
+
+  // WEBSOCKET SETUP FOR CHAT ROUTE 
+
       // Send message to specific chatroom
       socket.on("chat-room", function(data){
           socket.join(data);
@@ -301,6 +362,9 @@ const io = socket(server, {
       });
 
 
+
+
+
       // WEBSOCKET (Socket.io) SETUP FOR DICOVER SEARCH
 
       socket.emit('search-room', {
@@ -313,7 +377,7 @@ const io = socket(server, {
       // Listen for emits from backend
       socket.on('search', function(data){
         async function search(){
-          const appUsers = await User.find({appUsername: {$regex: "^"+data.searchData, $options: "mi"}});
+          const appUsers = await User.find({username: {$regex: "^"+data.searchData, $options: "mi"}});
           socket.emit('appUsers', appUsers);
 
           console.log(appUsers);

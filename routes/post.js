@@ -38,7 +38,7 @@ router.post('/', function(req, res){
       title: req.body.title,
       content: req.body.content,
       authorId: (req.user).id,
-      authorUsername: foundUser.appUsername,
+      authorUsername: foundUser.username,
     });
   
       post.save().then(function(){

@@ -9,7 +9,7 @@
                 <td><img src="" alt=""></td>
             </tr>
             <tr>
-                <h1><%= recipientData.appUsername %></h1>
+                <h1><%= recipientData.username %></h1>
             </tr>
         </tbody>
     </table>
@@ -38,10 +38,10 @@
         <div class="row">
 
             <input id="senderId" type="hidden" name="senderId" value="<%= recipientData._id %>">
-            <input id="senderName" type="hidden" name="senderName" value="<%= senderData.appUsername %>">
+            <input id="senderName" type="hidden" name="senderName" value="<%= senderData.username %>">
             
             <input id="recipientId" type="hidden" name="recipientId" value="<%= recipientData._id %>">
-            <input id="recipientName" type="hidden" name="recipientName" value="<%= recipientData.appUsername %>">
+            <input id="recipientName" type="hidden" name="recipientName" value="<%= recipientData.username %>">
 
             <div><input id="message" name="message" type="text" placeholder="message"></div>
 
