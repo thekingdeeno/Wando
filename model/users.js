@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const findOrCreate = require('mongoose-findorcreate');
 const { Schema, SchemaTypes, model } = mongoose;
 const passportLocalMongoose = require('passport-local-mongoose');
-// const passport = require('passport');
+
 
 const userSchema = new mongoose.Schema ({
     email: String, // User login email (formerly "username")
@@ -10,6 +10,8 @@ const userSchema = new mongoose.Schema ({
     fullname: String,
     password: String,
     userImage: String,
+    contactEmail: String,
+    contactPhone: String,
 
     googleId: String,
     facebookId: String,
@@ -18,6 +20,8 @@ const userSchema = new mongoose.Schema ({
     githubId: String,
 
     bio: String,
+    link: String,
+
     friends: [{
         type: SchemaTypes.ObjectId,
         ref: 'User',
@@ -38,8 +42,7 @@ const userSchema = new mongoose.Schema ({
     followers: [{
         type: SchemaTypes.ObjectId,
         ref: 'User'
-    }]
-
+    }],
 });
 
 userSchema.plugin(passportLocalMongoose, { usernameField : 'email' });

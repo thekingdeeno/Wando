@@ -40,7 +40,7 @@
     <div id="user-data">
 
         <img id="user-dp" src="/images/ceo.jpg" alt="">
-        <h1>Full Name</h1>
+        <h1><%=profileInfo.fullname%></h1>
         <p>@<%=profileInfo.username%></p>
         <% if (profileInfo.bio) { %>
             <p><%=profileInfo.bio%></p>         
@@ -50,7 +50,7 @@
         <p><%=postArray.length%> Posts  <%=(profileInfo.followers).length%> Followers <%=(profileInfo.following).length%> Following</p>
 
         <% if ((viewerInfo._id).toString() === (profileInfo._id).toString()) { %>
-         <button><a href="/editprofile">Edit Profile</a></button>
+         <button><a href="/profileedit">Edit Profile</a></button>
         <% } else { %>
         <button>Follow</button>
         <button><a href="/chat/newChat<%=(profileInfo._id).toString()%>">Message</a></button>
@@ -72,7 +72,7 @@
                 <a href="/profile/<%= post.authorUsername %>"><%= post.authorUsername %></a>
                 <button id="follow-button" type="submit">follow</button>
             </div>
-            <img src="images/ceo.jpg" class="card-img-top" alt="...">
+            <img src="" class="card-img-top" alt="...">
             <div class="card-body">
                 <h5 class="card-title"><%= post.title %></h5>
                 <p class="card-text"><%= post.content %></p>
@@ -134,14 +134,7 @@
             
                             <% (post.comments).forEach(comment => { %>
                             <p><a href="/profile/<%= comment.username %> "><%= comment.username %></a> <%= comment.content %>.  <%= comment.likes %> Likes</p>
-                            <% }) %>>
-            
-            
-                        </li>
-                        <li class="list-group-item ">
-                            <form action="/post" method="post">
-                                <input type="text" name="comment" id="" placeholder="comment...">
-                            </form>
+                            <% }) %>
                         </li>
                     </ul>
             

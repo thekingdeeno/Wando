@@ -114,14 +114,9 @@
         
                         <% (post.comments).forEach(comment => { %>
                         <p><a href="/profile/<%= comment.username %> "><%= comment.username %></a> <%= comment.content %>.  <%= comment.likes %> Likes</p>
-                        <% }) %>>
+                        <% }) %>
         
         
-                    </li>
-                    <li class="list-group-item ">
-                        <form action="/post" method="post">
-                            <input type="text" name="comment" id="" placeholder="comment...">
-                        </form>
                     </li>
                 </ul>
         

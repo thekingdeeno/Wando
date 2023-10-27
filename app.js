@@ -250,6 +250,10 @@ app.use('/chat', chatroomRoute);
 const profileRoute = require('./routes/profile');
 app.use('/profile', profileRoute);
 
+// Profile Edit Route
+const profileEditRoute = require('./routes/profileedit');
+app.use('/profileedit', profileEditRoute);
+
 
 // Discover Route
 const discoverRoute = require('./routes/discover');
@@ -258,7 +262,7 @@ app.use('/discover', discoverRoute);
 
 
 
-// WEBSOCKET SETUP FOR REALTIME CHAT ROOM (Socket.io)
+// WEBSOCKET SETUP FOR REALTIME DATA EXCHANGFE BETWEEN SERVER AND CLIENT USING SOCKET.IO
 
 const io = socket(server, {
     transports: ["websocket","webtransport"],
@@ -268,16 +272,16 @@ const io = socket(server, {
   io.on('connection', function(socket){
       console.log("made socket connection on "+ socket.id)
 
+    // join default room for user 
+    socket.join(socket.id);
+
+
+
 
 
 
 
   // WEBSOCKET SETUP FOR SIGNUP ROUTE
-
-  // join default room for user 
-    socket.join(socket.id);
-
-
     // function to check form credentials
     socket.on('signupFormCheck',function(data){
       async function validateForm(){
@@ -300,9 +304,7 @@ const io = socket(server, {
       };
 
       validateForm();
-
     });
-
     // function to tell user if username alredy exists 
     socket.on('createUsername', function(data) {
       // console.log(data.newUsername)
@@ -326,8 +328,62 @@ const io = socket(server, {
 
 
 
+  // WEBSOCKET SETUP FOR PROFILE EDIT
+    socket.on('editUsername', function(data){
+      async function usernameCheck(){
+        const foundUsers = await User.find({username: data.newUsername});
+        if (foundUsers.length===0) {
+          socket.emit('editUsername', "available");
+        } else {
+          socket.emit('editUsername', "unavailable");
+        };
+      };
+      usernameCheck();
+    });
 
-  // WEBSOCKET SETUP FOR CHAT ROUTE 
+
+
+
+
+
+
+
+
+
+
+  // WEBSOCKET SETUP FOR MESSAGES PAGE
+
+    socket.on('msgSearch', function(data){
+        console.log(data)
+        async function search(){
+          
+          const msgUsers = [] 
+
+          const startsWith = await User.find({username: {$regex: "^"+data.searchData, $options: "i"}});
+
+          const includes = await User.find({username: {$regex: data.searchData, $options: "i"}});
+
+
+          msgUsers.push(...startsWith)
+
+          if (startsWith.length === 0 ) {
+            msgUsers.push(...includes)
+          };
+
+          socket.emit('msgUsers', msgUsers);
+        };
+        search()
+        
+    });
+
+
+
+
+
+
+
+
+  // WEBSOCKET SETUP FOR CHAT
 
       // Send message to specific chatroom
       socket.on("chat-room", function(data){
@@ -358,8 +414,11 @@ const io = socket(server, {
               foundChat.save();
   
           });
-  
       });
+
+
+
+
 
 
 
@@ -371,16 +430,27 @@ const io = socket(server, {
         room: socket.id,
       });
 
-      // join default room
-      socket.join(socket.id)
+      // // join default room
+      // socket.join(socket.id)
 
       // Listen for emits from backend
       socket.on('search', function(data){
         async function search(){
-          const appUsers = await User.find({username: {$regex: "^"+data.searchData, $options: "mi"}});
-          socket.emit('appUsers', appUsers);
+          
+          const searchResult = [] 
 
-          console.log(appUsers);
+          const startsWith = await User.find({username: {$regex: "^"+data.searchData, $options: "i"}});
+
+          const includes = await User.find({username: {$regex: data.searchData, $options: "i"}});
+
+
+          searchResult.push(...startsWith)
+
+          if (startsWith.length === 0 ) {
+            searchResult.push(...includes)
+          };
+
+          socket.emit('appUsers', searchResult); 
         }
         search()
         

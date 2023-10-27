@@ -46,9 +46,12 @@
         </div>
         <div>
             <form action="/messages" method="POST">
-                <input name="search" type="text" placeholder="search">
-                <button type="submit">Find</button>
+                <input name="search" id="search-input" type="text" placeholder="search">
+                <button id="search-btn" type="submit">Find</button>
             </form>
+        </div>
+        <div id="search-results">
+
         </div>
         <div id="messages">
 
@@ -62,9 +65,13 @@
             </div>
             <div>
                 <form action="/messages" method="POST">
-                    <input name="search" type="text" placeholder="search">
-                    <button type="submit">Find</button>
+                    <input name="search" id="search-input" type="text" placeholder="search">
+                    <button id="search-btn" type="submit">Find</button>
                 </form>
+            </div>
+
+            <div id="search-results">
+
             </div>
 
 
@@ -112,5 +119,50 @@
 
 
 </div>
+
+<script>
+// Query DOM
+const searchInput = document.getElementById('search-input');
+const searchBtn = document.getElementById('search-btn');
+const searchResults = document.getElementById('search-results')
+
+
+// Make Connection
+const socket = io.connect("http://localhost:3000", {
+    transports: ["websocket","webtransport"],
+    addTrailingSlash: false,
+});
+
+
+
+// Emit Events
+document.addEventListener('keyup', function(event){
+    if (event.target.matches('input')) {
+        
+        socket.emit('msgSearch',{
+            searchData: searchInput.value,
+        });
+
+    };
+});
+
+// Listen for Events
+socket.on('msgUsers', function(data){
+    console.log(data);
+        searchResults.innerHTML = ""
+        data.forEach(user => {
+            searchResults.innerHTML +=
+        "<div id=foundUser><p><a href=/chat/newChat"+user._id+">"+user.username+"</a></p></div>"
+        });
+        if (data.length === 0) {
+            searchResults.innerHTML = ""
+        }
+        if (searchInput.value === ""){
+            searchResults.innerHTML = "";
+        }
+})
+
+
+</script>
 
 <%- include('partials/footer.ejs') %>

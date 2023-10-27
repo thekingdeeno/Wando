@@ -1,0 +1,78 @@
+<%- include('partials/header.ejs') %>
+
+<div>
+    <h1>Profile Settings</h1>
+    <form action="/profileedit" method="post" id="form" onsubmit="">
+        <div>
+            <label for="fullname">Name</label>
+            <input type="text" name="fullname" id="fullname" value="<%=userData.fullname%>">            
+        </div>
+        <div>
+            <label for="usename">Username</label>
+            <input type="hidden" id="oldUsername" value="<%=userData.username%>">
+            <input type="text" name="username" id="username" value="<%=userData.username%>"><span id="usernameError"></span>           
+        </div>
+        <div>
+            <label for="bio">Bio</label>
+            <textarea name="bio" id="bio" cols="" rows="1"><%=userData.bio%></textarea>            
+        </div>
+        <div>
+            <label for="link">Link</label>
+            <input type="text" name="link" id="link" value="<%=userData.link%>">            
+        </div>
+        <div>
+            <label for="contact">Contact</label>
+            <input type="text" name="contactEmail" id="contact-email" placeholder="Email" value="<%=userData.contactEmail%>">
+            <input type="text" name="contactPhone" id="contact-phone" placeholder="Phone No" value="<%=userData.contactPhone%>">            
+        </div>
+
+
+
+
+        <button type="submit" id="submit-btn">Save</button>
+    </form>
+
+    <h3><a href="/accountemail">Change Account Email</a></h3>
+</div>
+
+<script>
+    // Query DOM 
+    const oldUsername = document.getElementById('oldUsername');
+    const username = document.getElementById('username');
+    const button = document.getElementById('submit-btn');
+    const form = document.getElementById('form');
+
+    // Connect to the backend 
+    const socket = io.connect("http://localhost:3000", {
+        transports: ["websocket","webtransport"],
+        addTrailingSlash: false,
+    });
+
+    // Emit Events
+    document.addEventListener('keyup', function(event) {
+        if (event.target.matches('#username')) {
+                socket.emit('editUsername',{
+                    newUsername: username.value,
+                });
+            };
+    });
+
+    // Listen For Events 
+    socket.on('editUsername', function(data){
+        if (data==="available") {
+            form.setAttribute('onsubmit', "return true");
+            document.getElementById('usernameError').innerHTML = "";
+        } if(data==="unavailable") {
+            if (username.value===oldUsername.value) {
+                form.setAttribute('onsubmit', "return true");
+                document.getElementById('usernameError').innerHTML = "";
+            }else{
+                form.setAttribute('onsubmit', "return false");
+                document.getElementById('usernameError').innerHTML = "that username has been used by another user";
+            };
+        };
+    });
+
+</script>
+
+<%- include('partials/footer.ejs') %>

@@ -20,7 +20,7 @@
 
     </div>
     <% (chatData.messages).forEach(message => { %>
-        <% if ((message.authorId).toString() === (senderData._id).toString()) { %>
+        <% if ((message.authorId).toString() !== (senderData._id).toString()) { %>
             <div id="db-chat" style="text-align: right;">
         <% }else{ %>
             <div id="db-chat" style="text-align: left;"></div>
