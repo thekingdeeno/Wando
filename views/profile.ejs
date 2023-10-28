@@ -11,9 +11,9 @@
             <div class="tab-btn">
                 <a href="/discover"><i class="fa-solid fa-magnifying-glass"></i>Discover</a>
             </div>
-            <div class="tab-btn">
+            <!-- <div class="tab-btn">
                 <a href="/camps"><i class="fa-solid fa-fire"></i>Camps</a>
-            </div>
+            </div> -->
             <div class="tab-btn">
                 <a href="/messages"><i class="fa-regular fa-envelope"></i>Messages</a>
             </div>            
@@ -52,7 +52,14 @@
         <% if ((viewerInfo._id).toString() === (profileInfo._id).toString()) { %>
          <button><a href="/profileedit">Edit Profile</a></button>
         <% } else { %>
-        <button>Follow</button>
+            <% if ((viewerInfo.following).includes(profileInfo._id)) { %>
+                <button id="unfollow-button">Following</button>             
+            <% } else { %>
+                <button id="follow-button">Follow</button>
+            <% } %>
+
+        <input type="hidden" id="profileId" value="<%=(profileInfo._id).toString()%>">
+        <input type="hidden" id="viewerId" value="<%=(viewerInfo._id).toString()%>">
         <button><a href="/chat/newChat<%=(profileInfo._id).toString()%>">Message</a></button>
         <% } %>
 
@@ -182,5 +189,34 @@
         </div>
     </div>
 </div>
+
+<script>
+    const followButton = document.getElementById('follow-button');
+    const unfollowButton = document.getElementById('unfollow-button');
+    const viewerId = document.getElementById('viewerId').value;
+    const profileId = document.getElementById('profileId').value;
+
+    // Connect to the backend 
+    const socket = io.connect("http://localhost:3000", {
+        transports: ["websocket","webtransport"],
+        addTrailingSlash: false,
+    });
+
+    // Emit Events 
+    followButton.addEventListener('click', function(){
+        socket.emit('profileFollow', {
+            follower: viewerId,
+            profile: profileId,
+        });
+    });
+
+    unfollowButton.addEventListener('click', function(){
+        socket.emit('profileUnfollow', {
+            follower: viewerId,
+            profile: profileId,
+        });
+    });
+
+</script>
 
 <%- include('partials/footer.ejs') %>

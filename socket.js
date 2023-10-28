@@ -107,6 +107,53 @@ const io = socket(server, {
 
 
 
+  // WEBSOCKET SETUP FOR FOLLOW AND UNFOLLOW
+    socket.on('profileFollow', function(data) {
+      console.log(data);
+      async function profileFollow (){
+        const newFollower = await User.findById(data.follower);
+        const profile = await User.findById(data.profile);
+
+
+        newFollower.following.push(profile._id);
+        profile.followers.push(newFollower._id);
+
+        newFollower.save();
+        profile.save();
+      };
+      profileFollow()
+    });
+
+    socket.on('profileUnfollow', function(data) {
+      async function profileUnfollow (){
+        const unfollower = await User.findById(data.follower);
+        const profile = await User.findById(data.profile);
+
+        // removing profile from unfollowers following list
+        (unfollower.following).forEach(user => {
+          if (user.toString() === (profile._id).toString()) {
+            const userIndex = (unfollower.following).indexOf(user);
+            (unfollower.following).splice(userIndex, 1);
+            unfollower.save();             
+          };
+         
+        });
+
+        // removing unfollower from profile followers list
+        (profile.followers).forEach(user => {
+          if (user.toString() === (unfollower._id).toString()) {
+            const userIndex = (profile.followers).indexOf(user);
+            (profile.followers).splice(userIndex, 1);
+            profile.save();
+          };
+
+        });
+
+
+
+      };
+      profileUnfollow();
+    });
 
 
 
