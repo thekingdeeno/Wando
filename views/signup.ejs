@@ -54,7 +54,7 @@
         
 
         // Connect to the backend 
-        const socket = io.connect("http://localhost:3000", {
+        const socket = io.connect(window.location.origin, {
             transports: ["websocket","webtransport"],
             addTrailingSlash: false,
         });

@@ -17,11 +17,8 @@ const postSchema = new Schema({
     image: String,
     tags: [String],
     likes: [{
-        userId: {
             type: SchemaTypes.ObjectId,
             ref: 'User',            
-        },
-        username: String,
     }],
     comments: [{
         userId: {

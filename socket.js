@@ -21,6 +21,7 @@ const router = express.Router();
 
 
 const server = require('./app');
+// console.log(window.location);
 
 
 const socketFunctions = function() {
@@ -107,6 +108,10 @@ const io = socket(server, {
 
 
 
+
+
+
+
   // WEBSOCKET SETUP FOR FOLLOW AND UNFOLLOW
     socket.on('profileFollow', function(data) {
       console.log(data);
@@ -148,9 +153,6 @@ const io = socket(server, {
           };
 
         });
-
-
-
       };
       profileUnfollow();
     });
@@ -239,10 +241,6 @@ const io = socket(server, {
       socket.emit('search-room', {
         room: socket.id,
       });
-
-      // // join default room
-      // socket.join(socket.id)
-
       // Listen for emits from backend
       socket.on('search', function(data){
         async function search(){
@@ -267,7 +265,66 @@ const io = socket(server, {
       });
 
 
-  
+      // SOCKET SETUP FOR POST LIKE AND UNLIKE
+      socket.on('like-post', function(data){
+
+        async function likePost(){
+          const foundPost = await Post.findById(data.postId);
+
+          if ((foundPost.likes).includes(data.likeId)) {
+            (foundPost.likes).forEach(like => {
+              console.log('2');
+              console.log(like,data.likeId);
+              if (like.toString()===(data.likeId).toString()) {
+                const likeIndex = (foundPost.likes).indexOf(like);
+                foundPost.likes.splice(likeIndex, 1);
+                foundPost.save();
+              };
+            });            
+          } else {
+            foundPost.likes.push(data.likeId)
+            foundPost.save();            
+          }         
+
+
+        };
+        likePost();
+      });
+
+
+
+      // SOCKET SETUP FOR POST COMMENTS
+      socket.on('show-comments', function(postId){
+        console.log(postId);
+        Post.findById(postId).then(function(foundPost) {
+          socket.emit('show-comments', foundPost)
+        });
+      });
+
+      socket.on('new-comment', function(data){
+        console.log(data);
+
+        async function postComment(){
+          const post = await Post.findById(data.post);
+          const commenter = await User.findById(data.user);
+          (post.comments).push({
+            userId: data.user,
+            username: commenter.username,
+            content: data.comment,
+          });
+          post.save();
+        };
+        postComment();
+
+      });
+
+
+
+
+
+
+
+
   });
 
 

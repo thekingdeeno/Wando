@@ -1,5 +1,38 @@
 <%- include('partials/header.ejs') %>
 
+<style>
+    #comment-overlay{
+        background-color: rgba(73, 75, 73, 0.644);
+        padding: 200px;
+        position: fixed;
+        z-index: 1;
+        height: 100%;
+        width: 100%;
+    }
+    #comment-box{
+        background-color: black;
+        text-align: center;
+        border-radius: 15px;
+    };
+</style>
+
+
+    <div id="comment-overlay" style="display: none;">
+        <div id="comment-box">
+            <h3>Comments</h3>
+            <div id="comments">
+                <input type="hidden" id="post-id" value="">              
+            </div>
+
+            
+            <div>
+                <input type="text" id="comment-input" name="comment" autocomplete="off">
+                <button id="comment-submit" value=""><i class="fa-solid fa-paper-plane"></i>send</button>
+            </div>            
+        </div>
+
+    </div>
+
 <div class="row">
     <!-- side bar buttons  -->
     <div id="left-pane" class="col">
@@ -91,7 +124,7 @@
                 <div class="card-header">
                     <i class="fa-solid fa-user"></i> 
                     <a href="/profile/<%= post.authorUsername %>"><%= post.authorUsername %></a>
-                    <button id="follow-button" type="submit">follow</button>
+                    <!-- <button id="follow-button" type="submit">follow</button> -->
                 </div>
                 <div class="card-body">
                     <h5 class="card-title"><%= post.title %></h5>
@@ -100,10 +133,16 @@
         
                 <ul class="list-group list-group-flush">
                     <li class="list-group-item">
-                        <button><i class="fa-regular fa-heart"></i></button>
-                        <button><i class="fa-regular fa-comment"></i></button>
-                        <button><i class="fa-solid fa-retweet"></i></button>
-                        <button><i class="fa-regular fa-share-from-square"></i></button>
+                        <% if ((post.likes).includes(thisUser._id)) { %>
+                            <button id="like-btn" value="<%=post._id%>"><i class="fa-solid fa-heart"></i></button>                         
+                        <% }else{ %>
+                            <button id="like-btn" value="<%=post._id%>"><i class="fa-regular fa-heart"></i></button>
+                        <% } %>
+
+
+                        <button id="comment-btn" value="<%=post._id%>" onclick='comment("<%=post._id%>")'><i class="fa-regular fa-comment"></i></button>
+                        <button id="repost"><i class="fa-solid fa-retweet"></i></button>
+                        <!-- <button id="share"><i class="fa-regular fa-share-from-square"></i></button> -->
                         
                     </li>
                     <li class="list-group-item">
@@ -163,6 +202,69 @@
             </div>
         </div>
     </div>
+
+
+    <input type="hidden" id="viewer-id" value="<%=thisUser._id%>">
 </div>
+
+<script>
+    // Query DOM 
+    const likeBtn = document.getElementById('like-btn');
+    const commentInput = document.getElementById('comment-input');
+    const commentSubmit = document.getElementById('comment-submit');
+    const viewerId = document.getElementById('viewer-id');
+
+
+    // connect to server-side socket 
+    const socket = io.connect(window.location.origin, {
+        transports: ["websocket","webtransport"],
+        addTrailingSlash: false,
+    });
+
+
+    // function to remove comment window
+    document.addEventListener('click', function(event){
+        if(event.target.id === "comment-overlay"){
+            document.getElementById('comment-overlay').style = "display: none;"
+            document.getElementById('comments').innerHTML = "";
+            document.getElementById('post-id').setAttribute('value', "");
+        };
+    });    
+
+
+    // emit events 
+    likeBtn.addEventListener('click', function(btn){
+        socket.emit('like-post', {
+            postId : likeBtn.value,
+            likeId : viewerId.value,
+        })
+    });
+
+
+    async function comment(postId){
+        socket.emit('show-comments', postId);
+        document.getElementById('comment-overlay').style = "display: block;";
+        document.getElementById('post-id').setAttribute('value', postId);
+        await socket.on('show-comments', function(data){
+            (data.comments).forEach(comment => {
+                document.getElementById('comments').innerHTML += '<div><a href=/profile/'+comment.username+'>'+comment.username+'</a> <span>'+comment.content+'</span></div>'
+            });
+        })
+    };
+
+    commentSubmit.addEventListener('click', function(e){
+        console.log(e);
+        socket.emit('new-comment', {
+            post: document.getElementById('post-id').value,
+            user: viewerId.value,
+            comment: commentInput.value,
+        });
+        // document.getElementById('comment-overlay').style = "display: none;"
+    });
+
+
+
+
+</script>
 
 <%- include('partials/footer.ejs') %>
