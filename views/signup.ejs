@@ -1,48 +1,138 @@
 <%- include('partials/header.ejs') %>
 
-    <div class="col">
-        <div class="card" id="signup form">
-            <div class="card-header">
-                <h1 class="card-title">Wando</h1>
-                <p class="card-text">Sign up to Wando today and find communities where you feel at home</p>
-            </div>
+<style>
 
+    #logo{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 40px 0 60px 0;
+    }
+
+
+
+    #signup-section{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    #signup-panel{
+        /* background-color: antiquewhite; */
+        /* background-color: rgba(165, 42, 42, 0.397);
+        padding: 30px 30px;
+        border-radius: 10px;
+        box-shadow: 0px -25px 20px -20px rgba(0, 0, 0, 0.45), 25px 0 20px -20px rgba(0, 0, 0, 0.45), 0px 25px 20px -20px rgba(0, 0, 0, 0.45), -25px 0 20px -20px rgba(0, 0, 0, 0.45); */
+        width: fit-content;
+    }
+
+    #signup-form{
+        background-color: rgba(165, 42, 42, 0.397);
+        padding: 30px;
+        border-radius: 5px;
+        box-shadow: 0px -25px 20px -20px rgba(0, 0, 0, 0.45), 25px 0 20px -20px rgba(0, 0, 0, 0.45), 0px 25px 20px -20px rgba(0, 0, 0, 0.45), -25px 0 20px -20px rgba(0, 0, 0, 0.45);
+        margin: 0px;
+    }
+
+    #instruction{
+        text-align: center;
+        padding: 0 0 10px 0;
+    }
+
+    /* #instruction-2{
+
+    } */
+
+    .error{
+        font-size: small;
+        transform: 500ms;
+    }
+
+    form{
+        text-align: center;
+    }
+
+    form input{
+        padding: 10px;
+        /* margin: 10px; */
+        border-radius: 10px;
+        border: none;
+    }
+    
+    form button{
+        padding: 10px;
+        margin: 10px;
+    }
+
+    #alt-signup{
+        
+        text-align: center;
+        padding: 30px 30px 30px 30px;
+    }
+
+    .alt-signup-btn{
+        padding: 10px;
+    }
+
+    .alt-signup-btn a{
+        width: 240px;
+    }
+</style>
+
+<div id="logo">
+    <a class="navbar-brand" href="/" style="color: white;"><i class="fa-solid fa-icons fa-2xl" style="color: #ffffff;"></i> Wando</a>
+</div>
+
+
+<div id="signup-section">
+    <div id="signup-panel" class="row">
+        <div id="signup-form" class="col-lg-6">
+            <div id="instruction">
+                <h2>Create an account</h2>
+            </div>
             <form action="/signup" id="signupForm" method="POST">
                 <div class="mb-2">
                     <input type="email" name="email" id="email" placeholder="Email" required>
-                    <span id="emailError"></span>
+                    <div class="error" id="emailError"></div>
                 </div> 
                 <div class="mb-2">
                     <input type="text" name="fullname" id="fullname" placeholder="Fullname" minlength="2" required>
-                    <span id="fullnameError"></span>
+                    <div class="error" id="fullnameError"></div>
                 </div>
-                <div>
+                <div class="mb-2">
                     <input type="text" name="username" id="username" placeholder="Username" minlength="2" required>
-                    <span id="usernameError"></span>
+                    <div class="error" id="usernameError"></div>
                 </div>
                 <div class="mb-2">
                     <input type="password" name="password" placeholder="Password" minlength="4" required>
                 </div>
-
+    
                 <button class="btn btn-dark" type="submit" onsubmit="return false" id="signupBtn" >Sign Up</button>
             </form>
-
-                <h1>OR</h1>
-
-            <div>
-                <div class="card-body">
-                    <a class="btn btn-block btn-social btn-google" href="/auth/google"><i class="fab fa-google"></i>Sign up with Google</a>
-                </div>
-                <div class="card-body">
-                    <a class="btn btn-block btn-social btn-facebook" href="/auth/facebook"><i class="fab fa-facebook"></i>Sign up with Facebook</a>
-                </div>
-                <div class="card-body">
-                    <a class="btn btn-block btn-social btn-twitter" href="/auth/twitter"><i class="fab fa-twitter"></i>Sign up with Twitter</a>
-                </div>
+        </div>
+    
+        <div id="alt-signup" class="col-lg-6">
+            <div id="instruction-2">
+                <h2>Other Sign In Options</h2>
+            </div>
+            <div class="alt-signup-btn">
+                <a class="btn btn-block btn-social btn-google" href="/auth/google"><i class="fab fa-google"></i>Sign up with Google</a>
+            </div>
+            <div class="alt-signup-btn">
+                <a class="btn btn-block btn-social btn-facebook" href="/auth/facebook"><i class="fab fa-facebook"></i>Sign up with Facebook</a>
+            </div>
+            <div class="alt-signup-btn">
+                <a class="btn btn-block btn-social btn-twitter" href="/auth/twitter"><i class="fab fa-twitter"></i>Sign up with Twitter</a>
             </div>
         </div>
-
     </div>
+</div>
+
+
+
+
+
+
 
     <script>
         const email = document.getElementById('email');
@@ -89,7 +179,7 @@
                 document.getElementById('usernameError').innerHTML= '<em style="color: green;">Available</em>';
               break;
                 case 'unavailable':
-                    document.getElementById('usernameError').innerHTML= '<em style="color: red;">This Username has already been taken.</em>';
+                    document.getElementById('usernameError').innerHTML= '<em style="color: red;">This Username is taken.</em>';
                     
                     break;
                 default:
@@ -116,7 +206,7 @@
                 // console.log(data.status)
                 signupForm.setAttribute('onsubmit', "return false;");
                 if (data.emailError > 0) {
-                    document.getElementById('emailError').innerHTML= '<em style="color: red;">This email has already used to create an account.</em>';
+                    document.getElementById('emailError').innerHTML= '<em style="color: red;">An account with this email exists.</em>';
                     };
                 if (data.usernameError > 0) {
                     // alert("Please choose another username that one has been taken.")

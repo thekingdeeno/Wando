@@ -1,43 +1,105 @@
 <%- include('partials/header.ejs') %>
 
+<style>
+    .row{
+        padding: 50px 0 0 0;
+    }
 
-<div class="row">
-    <div class="col">
-        <div class="">
-            <div>
-            <h1>Wando</h1>
-            <h1>On!</h1>
-            </div>            
-            <div>
-            </div>
+    #reg-left{
+        text-align: center;
+        padding: 40px;
+    }
+
+    #reg-left h1{
+        font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    #logo {
+        padding: 40px;
+    }
+
+    #logo a{
+        background-color: rgb(64, 22, 75);
+        padding: 30px;
+        border-radius: 10px;
+    }
+
+    #security-info{
+        padding: 30px 0 0 0;
+    }
+
+    #reg-right{
+        padding: 40px;
+        /* background-color: rgba(165, 42, 42, 0.397); */
+    }
+    #reg-panel{
+        background-color: rgba(165, 42, 42, 0.397);
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0px -25px 20px -20px rgba(0, 0, 0, 0.45), 25px 0 20px -20px rgba(0, 0, 0, 0.45), 0px 25px 20px -20px rgba(0, 0, 0, 0.45), -25px 0 20px -20px rgba(0, 0, 0, 0.45);
+
+    }
+
+    #alt-reg{
+        text-align: center;
+    }
+
+    #alt-reg a{
+        margin: 10px;
+        width: 240px;
+    }
+    
+    #main-reg{
+        text-align: center;
+    }
+
+    #main-reg :hover{
+        transition: 500ms;
+        font-weight: 200;
+    }
+
+</style>
+
+<div class="row" id="row">
+    <div class="col" id="reg-left">
+        <div class="">        
+                <div id="logo">
+                    <a class="navbar-brand" href="/" style="color: white;"><i class="fa-solid fa-icons fa-2xl" style="color: #ffffff;"></i> Wando</a>
+                </div>
+                <div id="security-info">
+                    <h1>We're Secure <i class="fa-solid fa-shield-halved" style="color: #ffffff;"></i></h1>
+                    <p>You can sign in with your email and a password. You can TRUST us as passwords are encrypted before it can be used for authentication. It can not be seen by anyone as your credentials aren't stored. <br>Alternatively you can sign in using third party apps which you already use. Authentication is handled by the third party application and so you would not need to worry about your safety</p>
+                </div>
         </div>
 
     </div>
 
-    <div class="col">
-        <div class="card">
-            <div class="card-body">
-                <a class="btn btn-block btn-social btn-google" href="/auth/google"><i class="fab fa-google"></i>Sign In with Google</a>
-            </div>
-            <div class="card-body">
-                <a class="btn btn-block btn-social btn-facebook" href="/auth/facebook"><i class="fab fa-facebook"></i>Sign In with Facebook</a>
-            </div>
-            <div class="card-body">
-                <a class="btn btn-block btn-social btn-twitter" href="/auth/twitter"><i class="fab fa-twitter"></i>Sign In with twitter</a>
-            </div>
-            <br>
-            <p>or</p>
+    <div class="col" id="reg-right">
 
-            <a class="btn btn-dark" href="/signup">Create Account</a>
-            
-            <p>By signing up to Wando you agree to our <a href="/policy/">Mode of operation</a> and <a href="/policy/">Terms of service</a>. Please note that <a href="/policy/">Cookies</a> are used to give our members better user experience. You can read up on more on our <a href="/policy">Policy</a> page.
-            </p>                
-
-            <h5>Have an account?</h5>
-            <a class="btn btn-info" href="/login">Log in</a>
-
-            
+        <div id="reg-panel">
+            <div id="alt-reg">
+                <h1>Sign In Options</h1>
+                <div class="alt-reg-btn">
+                    <a class="btn btn-block btn-social btn-google" href="/auth/google"><i class="fab fa-google"></i>Sign In with Google</a>
+                </div>
+                <div class="alt-reg-btn">
+                    <a class="btn btn-block btn-social btn-facebook" href="/auth/facebook"><i class="fab fa-facebook"></i>Sign In with Facebook</a>
+                </div>
+                <div class="alt-reg-btn">
+                    <a class="btn btn-block btn-social btn-twitter" href="/auth/twitter"><i class="fab fa-twitter"></i>Sign In with twitter</a>
+                </div>
+            </div>
+            <hr>
+            <div id="main-reg">
+                <a class="btn btn-dark" href="/login">Login</a>
+                <!-- <p>By signing up to Wando you agree to our <a href="/policy/">Mode of operation</a> and <a href="/policy/">Terms of service</a>. Please note that <a href="/policy/">Cookies</a> are used to give our members better user experience. You can read up on more on our <a href="/policy">Policy</a> page.
+                </p>                 -->
+    
+                <!-- <h5>Have an account?</h5> -->
+                <a class="btn" href="/signup" style="text-decoration: none; color: #ffffff;">Sign Up</a>
+            </div>
         </div>
+
     </div>
 </div>
 

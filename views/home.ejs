@@ -14,7 +14,43 @@
         text-align: center;
         border-radius: 15px;
     };
+
+    #all-posts{
+        text-align: center;
+    }
 </style>
+
+<nav class="navbar navbar-expand-lg " style="background-color: rgb(64, 22, 75);">
+    <div class="container-fluid" id="navbar">
+        <a class="navbar-brand" href="/" style="color: white;"><i class="fa-solid fa-icons fa-2xl"></i> Wando</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+        <div class="collapse navbar-collapse nav justify-content-center" id="navbarNav">
+            <ul class="navbar-nav" >
+                <li class="nav-item">
+                    <a class="nav-link" href="/home" style="color: white;">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/discover" style="color: white;">Discover</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/messages" style="color: white;">Messages</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/upload" style="color: white;">Upload</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/profile/<%=thisUser.username%>" style="color: white;">Profile</a>
+                </li>
+            </ul>
+        </div>
+        <div id="login-buttons">
+            <a class="btn btn-light" href="/login">Log In</a>
+            <a class="btn btn-dark" href="/signup">Create free account</a>
+        </div>
+    </div>
+</nav>
 
 
     <div id="comment-overlay" style="display: none;">
@@ -34,44 +70,11 @@
     </div>
 
 <div class="row">
-    <!-- side bar buttons  -->
-    <div id="left-pane" class="col">
-        <h1><a href="/">Wando</a></h1>
-        <div id="tabs">
-            <div class="tab-btn">
-                <a href="/home"><i class="fa-solid fa-house"></i>Home</a>
-            </div>
-            <div class="tab-btn">
-                <a href="/Discover"><i class="fa-solid fa-magnifying-glass"></i>Discover</a>
-            </div>
-            <!-- <div class="tab-btn">
-                <a href="/camps"><i class="fa-solid fa-fire"></i>Camps</a>
-            </div> -->
-            <div class="tab-btn">
-                <a href="/messages"><i class="fa-regular fa-envelope"></i>Messages</a>
-            </div>            
-            <div class="tab-btn">
-                <a href="/notifications"><i class="fa-regular fa-comment"></i>Notifications</a>
-            </div>
-            <div class="tab-btn">
-                <a href="/upload"><i class="fa-solid fa-plus"></i>Post</a>
-            </div>
-            <div class="tab-btn">
-                <a href="/profile/<%=thisUser.username%>"><i class="fa-regular fa-user"></i>Profile</a>
-            </div>
-        </div>
-        <div id="more-options">
-            <button>more</button>
-        </div>
-    </div>
-
-
-
-
-
-
-    <div id="middle-pane" class="col">
-        <h1>Main Content</h1>
+    <div id="all-posts" class="col">
+        <form action="/home" method="post">
+            <input type="text" placeholder="Find Posts">
+            <button type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
+        </form>
 
 
 
@@ -176,7 +179,7 @@
 
 
     <!-- friends & messages -->
-    <div id="right-pane" class="col">
+    <!-- <div id="right-pane" class="col">
         <div id="search-box">
             <input type="text" placeholder="search">
         </div>
@@ -201,7 +204,7 @@
                 </ul>
             </div>
         </div>
-    </div>
+    </div> -->
 
 
     <input type="hidden" id="viewer-id" value="<%=thisUser._id%>">

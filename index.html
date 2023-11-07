@@ -10,6 +10,11 @@
     <!-- font-awesome  -->
     <script src="https://kit.fontawesome.com/13c5e2a015.js" crossorigin="anonymous"></script>
 
+    <!-- Google fonts  -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Agbalumo&family=Poppins:wght@100;200;300;400;600;700;800&display=swap" rel="stylesheet">
+
     <!-- Bootstrap and Popper JS Links  -->
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js" integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+" crossorigin="anonymous"></script>
@@ -26,45 +31,45 @@
 </head>
 <body>
 
-<nav class="navbar navbar-expand-lg ">
-    <div class="container-fluid">
-        <a class="navbar-brand" href="/home"><i class="fa-solid fa-otter fa-2xl" ></i> Wando</a>
+<nav class="navbar navbar-expand-lg " style="background-color: rgb(64, 22, 75); padding: 10px;">
+    <div class="container-fluid" id="navbar">
+        <a class="navbar-brand" href="/home" style="color: white;"><i class="fa-solid fa-icons fa-2xl" style="color: #ffffff;"></i> Wando</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
           </button>
         <div class="collapse navbar-collapse nav justify-content-center" id="navbarNav">
-            <ul class="navbar-nav">
+            <ul class="navbar-nav" >
                 <li class="nav-item">
-                    <a class="nav-link" href="">Github</a>
+                    <a class="nav-link" href="" style="color: white;">Github</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="">LinkedIn</a>
+                    <a class="nav-link" href="" style="color: white;">LinkedIn</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="">Fiver</a>
+                    <a class="nav-link" href="" style="color: white;">Fiver</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="">About Me</a>
+                    <a class="nav-link" href="" style="color: white;">About Me</a>
                 </li>
             </ul>
         </div>
         <div id="login-buttons">
             <a class="btn btn-light" href="/login">Log In</a>
-            <a class="btn btn-dark" href="/signup">Create free account</a>
+            <a class="btn btn-dark" href="/signup">Create an account</a>
         </div>
     </div>
 </nav>
 
-<div class="container-fluid container mt-5">
+<div class="container-fluid container mt-5" id="showcase">
     <div class="row">
-        <div class="col" id="left-showcase">
+        <div class="col-lg-6 col-md-6 col-sm-6" id="left-showcase">
             <div id="showcase-title">
                 <h1>Connecting</h1>
                 <h1>Communities</h1>
             </div>
-            <div id="showcae-text">
+            <div id="showcase-text">
                 <p>
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Unde deserunt veniam pariatur! Nulla, expedita aut recusandae illo, quas non accusantium quos molestias quasi reprehenderit quibusdam in libero eius qui nisi.
+                    Spread stories, meet people and make lots of meaningful connections. On Wando you'll be able to post blogs and communicate with other users and make new friends. no ads, no fees, no subscription. In future updates youll be able to join and build camps with people of similar interests.
                 </p>
             </div>
             <div id="site-link">
@@ -73,22 +78,33 @@
 
         </div>
         
-        <div class="col" id="right-showcase">
+        <div class="col-lg-6 col-md-6 col-sm-6" id="right-showcase">
             <div id="ceo-image">
                 <img src="/images/ceo.jpg" alt="">
             </div>
             <div id="ceo-text">
-                <p>Meet Nwando Ifezue, the founder of Wando Communications amongst other products of Deeno Technologies</p>
+                <p>Hi, I'm Nwando Ifezue, Send me a message on my wando account  <a href="/newChat/">@ifezue_king</a></p>
             </div>
         </div>
     </div>
 
 </div>
 
+<footer id="html-footer">
+    <div id="link">
+        <a href="https://www.linkedin.com/in/nwando-ifezue-979a99273/" rel="noopener" target="_blank"><i class="fa-brands fa-lg fa-linkedin " style="color: #ffffff; padding: 10px;"></i> </a>
 
-<script>
-    console.log(window.location.href)
-</script>
+        <a href="https://www.fiverr.com/nwandoifezue?source=gig_page" rel="noopener" target="_blank"><i class="fa-brands fa-lg fa-fonticons-fi" style="color: #ffffff; padding: 10px;"></i></a>
+    
+        <a href="https://github.com/thekingdeeno" rel="noopener" target="_blank"><i class="fa-brands fa-lg fa-github" style="color: #ffffff; padding: 10px;"></i> </a>
+    
+        <a href="mailto:nwandoifezue@gmail.com" target="_blank"><i class="fa-lg fa-solid fa-envelope" style="color: #ffffff; padding: 10px;"></i></a>
+    </div>
+    <br>
+    <p>Made by <a href="http://linktr.ee/nwandoifezue" target="_blank">Nwando Ifezue</a></p>
+
+</footer>
+
 
 
 
