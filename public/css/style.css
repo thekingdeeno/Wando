@@ -4,18 +4,44 @@ body {
     color: white;
 }
 
+#navbar{
+    display: flex;
+    justify-content: center;
+    padding: 10px;
+}
+
 .navbar-brand{
     font-family: Agbalumo;
     font-size: 30px;
 }
 
+#fixed-tab{
+    background-color: #40164b;
+    text-align: center;
+    padding: 20px;
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    border-top: 1px solid #eea2a271;
+}
+
+#fixed-tab a{
+    color: aliceblue;
+    padding: 10px;
+}
+
+#fixed-tab a:hover{
+    color: rgb(182, 70, 70);
+}
+
 footer{
     position: relative;
-    top: 150px;
+    bottom: 0px;
     width: 100%;
     text-align: center;
-    padding: 25px 0 10px 0;
-    background-color: #40164b;
+    padding: 25px 0 80px 0;
+    /* background-color: #40164b; */
 }
 
 footer a{

@@ -2,28 +2,189 @@
 
 <style>
     #comment-overlay{
-        background-color: rgba(73, 75, 73, 0.644);
-        padding: 200px;
+        background-color: rgba(0, 0, 0, 0.637);
+        padding: 200px 0 0 0 ;
+        display: flex;
+        justify-content: center;
+        align-items: center;
         position: fixed;
         z-index: 1;
-        height: 100%;
         width: 100%;
+        height: 100%;
     }
     #comment-box{
-        background-color: black;
+        background-color: rgb(82, 65, 65);
         text-align: center;
         border-radius: 15px;
-    };
+        box-shadow: rgba(0, 0, 0, 0.25) 0px 0.0625em 0.0625em, rgba(0, 0, 0, 0.25) 0px 0.125em 0.5em, rgba(255, 255, 255, 0.1) 0px 0px 0px 1px inset;
+        padding: 20px;
+    }
+
+    #comments span{
+        font-weight: 200;
+        font-size: 14px;
+    }
+
+    #comments a{
+        color: white;
+        font-weight: 600;
+        text-decoration: none;
+    }
+
+    #comment-box input{
+        margin: 10px 10px 0 0;
+        padding: 5px;
+        border-radius: 5px;
+        border: none;
+    }
+
+    @media  (min-width: 1366px) {
+        #comment-box input{
+            width: 40%;
+        }
+    }
+
+    #comment-box button{
+        padding: 0px;
+        color: white;
+        background-color: transparent;
+        border: none;
+    }
+
+    #comment-box button:hover{
+        color: rgb(182, 70, 70);
+    }
+
+    #search-area{
+        display: flex;
+        justify-content: center;
+        padding: 20px;
+    }
+
+    #search-area input{
+        padding: 10px;
+        border-radius: 10px;
+    }
+
+    @media  (min-width: 1366px) {
+        #search-area input{
+            padding: 10px;
+            border-radius: 10px;
+            width: 40%;
+        }
+    }
 
     #all-posts{
-        text-align: center;
+        padding: 10px 10px 10px 10px;
+        width: fit-content;
     }
+
+    .post{
+        background-color: rgba(165, 42, 42, 0.397);
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: rgba(0, 0, 0, 0.25) 0px 0.0625em 0.0625em, rgba(0, 0, 0, 0.25) 0px 0.125em 0.5em, rgba(255, 255, 255, 0.1) 0px 0px 0px 1px inset;
+    }
+
+    @media  (min-width: 1366px) {
+        .post{
+            width: 700px;
+        }
+    }
+
+    .post a{
+        text-decoration: none;
+    }
+
+    .post-header{
+        padding: 0 0 10px 10px;
+    }
+
+    .post-header a{
+        color: white;
+        font-weight: 600;
+        padding: 0 0 0 6px;
+    }
+
+    .post-header button{
+        float: right;
+        padding: 0 10px;
+    }
+
+    .post-title{
+        font-size: 20px;
+    }
+    
+    .post-content{
+        font-size: 14px;
+        font-weight: 300;
+    }
+
+    .icons button{
+        background-color: rgba(255, 235, 205, 0);
+        padding: 0px;
+        border: 0px;
+        font-size: 20px;
+    }
+
+    #comment-btn{
+        padding: 0 7px;
+    }
+
+    .icons i{
+        color: white;
+    }
+
+    .icons i:hover{
+        color: rgb(157, 111, 168);
+    }
+    
+    .post-data{
+        padding: 10px 0px 10px 0;
+    }
+
+    .post-data a{
+        font-size: 14px;
+        font-weight: 400;
+        color: rgba(255, 255, 255, 0.575);
+        padding: 0px;
+    }
+
+    .post-comments span{
+        font-weight: 200;
+        font-size: 14px;
+    }
+
+    .post-comments a{
+        color: white;
+        font-weight: 600;
+    }
+
+
+
 </style>
+
+<div id="comment-overlay" style="display: none;">
+    <div id="comment-box">
+        <h4>Comments</h4>
+        <hr>
+        <div id="comments">
+            <input type="hidden" id="post-id" value="">              
+        </div>
+
+        
+        <div>
+            <input type="text" id="comment-input" name="comment" autocomplete="off" placeholder=" Comment">
+            <button class="btn btn-light" id="comment-submit" value=""><i class="fa-solid fa-paper-plane"></i></button>
+        </div>            
+    </div>
+
+</div>
 
 <nav class="navbar navbar-expand-lg " style="background-color: rgb(64, 22, 75);">
     <div class="container-fluid" id="navbar">
         <a class="navbar-brand" href="/" style="color: white;"><i class="fa-solid fa-icons fa-2xl"></i> Wando</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <!-- <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
           </button>
         <div class="collapse navbar-collapse nav justify-content-center" id="navbarNav">
@@ -44,37 +205,25 @@
                     <a class="nav-link" href="/profile/<%=thisUser.username%>" style="color: white;">Profile</a>
                 </li>
             </ul>
-        </div>
-        <div id="login-buttons">
+        </div> -->
+        <!-- <div id="login-buttons">
             <a class="btn btn-light" href="/login">Log In</a>
             <a class="btn btn-dark" href="/signup">Create free account</a>
-        </div>
+        </div> -->
     </div>
 </nav>
 
 
-    <div id="comment-overlay" style="display: none;">
-        <div id="comment-box">
-            <h3>Comments</h3>
-            <div id="comments">
-                <input type="hidden" id="post-id" value="">              
-            </div>
 
-            
-            <div>
-                <input type="text" id="comment-input" name="comment" autocomplete="off">
-                <button id="comment-submit" value=""><i class="fa-solid fa-paper-plane"></i>send</button>
-            </div>            
-        </div>
 
-    </div>
+<div id="search-area"> 
+    <input type="text" name="search" id="" placeholder="Homepage search - COMING SOON!!!">
+</div>
 
-<div class="row">
-    <div id="all-posts" class="col">
-        <form action="/home" method="post">
-            <input type="text" placeholder="Find Posts">
-            <button type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
-        </form>
+
+
+<div class="">
+    <div id="all-posts" class="container-fluid">
 
 
 
@@ -82,141 +231,98 @@
 
 
         <% if (post.image) { %>
-    <div class="card text-bg-dark mb-3 post" style="width: 18rem;">
-        <div class="card-header">
+
+            <!-- copy content from below and add image from db on top  -->
+
+        <% } else { %>
+
+
+    <div class="post" class="">
+
+        <div class="post-header">
             <i class="fa-solid fa-user"></i> 
             <a href="/profile/<%= post.authorUsername %>"><%= post.authorUsername %></a>
-            <button id="follow-button" type="submit">follow</button>
-        </div>
-        <img src="images/ceo.jpg" class="card-img-top" alt="...">
-        <div class="card-body">
-            <h5 class="card-title"><%= post.title %></h5>
-            <p class="card-text"><%= post.content %></p>
+            
+            <!-- <button class="btn btn-light follow-button" type="submit">Follow</button> -->
         </div>
 
-        <ul class="list-group list-group-flush">
-            <li class="list-group-item">
-                <i class="fa-regular fa-heart"></i>
-                <i class="fa-regular fa-comment"></i>
-                <i class="fa-solid fa-retweet"></i>
-                <i class="fa-regular fa-share-from-square"></i>
-            </li>
-            <li class="list-group-item">
-                <a href= "/postname/likes"><%= post.likes.length  %> Likes</a>
-                <!-- <p class="post-caption"><a href="/profile">user_name</a> Lorem ipsum dolor sit</p> -->
+        <hr>
 
-                <p class="post-comments"><a href="postname/comments"><%= post.comments.length %> users commented</a></p>
-
-                <% (post.comments).forEach(comment => { %>
-                <p><a href="/profile"><%= comment.username %></a> <%= comment.content %>.  <%= comment.likes %> Likes</p>
-                <% }) %>>
-
-
-            </li>
-            <li class="list-group-item ">
-                <form action="/post" method="post">
-                    <input type="text" name="comment" id="" placeholder="comment...">
-                </form>
-            </li>
-        </ul>
-
+        <div class="post-body">
+            <h5 class="post-title"><%= post.title %></h5>
+            <p class="post-content"><%= post.content %></p>
         </div>
-        <hr>         
-        <% } else { %>
-            <div class="card text-bg-dark mb-3 post" style="width: 18rem;">
-                <div class="card-header">
-                    <i class="fa-solid fa-user"></i> 
-                    <a href="/profile/<%= post.authorUsername %>"><%= post.authorUsername %></a>
-                    <!-- <button id="follow-button" type="submit">follow</button> -->
-                </div>
-                <div class="card-body">
-                    <h5 class="card-title"><%= post.title %></h5>
-                    <p class="card-text"><%= post.content %></p>
-                </div>
-        
-                <ul class="list-group list-group-flush">
-                    <li class="list-group-item">
-                        <% if ((post.likes).includes(thisUser._id)) { %>
-                            <button id="like-btn" value="<%=post._id%>"><i class="fa-solid fa-heart"></i></button>                         
-                        <% }else{ %>
-                            <button id="like-btn" value="<%=post._id%>"><i class="fa-regular fa-heart"></i></button>
-                        <% } %>
 
+        <div class="icons">
+            <% if ((post.likes).includes(thisUser._id)) { %>
+                <button class="like-btn" value="<%=post._id%>"><i class="fa-solid fa-heart" style="color: rgb(236, 47, 47);"></i></button>                         
+            <% }else{ %>
+                <button class="like-btn" value="<%=post._id%>"><i class="fa-regular fa-heart"></i></button>
+            <% } %>
 
-                        <button id="comment-btn" value="<%=post._id%>" onclick='comment("<%=post._id%>")'><i class="fa-regular fa-comment"></i></button>
-                        <button id="repost"><i class="fa-solid fa-retweet"></i></button>
-                        <!-- <button id="share"><i class="fa-regular fa-share-from-square"></i></button> -->
-                        
-                    </li>
-                    <li class="list-group-item">
-                        <a href= "postname/likes"><%= post.likes.length  %> Likes</a>
-                        <!-- <p class="post-caption"><a href="/profile">user_name</a> Lorem ipsum dolor sit</p> -->
-        
-                        <p class="post-comments"><a href="/postname/comments"><%= post.comments.length %> users commented</a></p>
-        
-                        <% (post.comments).forEach(comment => { %>
-                        <p><a href="/profile/<%= comment.username %> "><%= comment.username %></a> <%= comment.content %>.  <%= comment.likes %> Likes</p>
-                        <% }) %>
-        
-        
-                    </li>
-                </ul>
-        
-                </div>
+            <button id="comment-btn" value="<%=post._id%>" onclick='comment("<%=post._id%>")'><i class="fa-regular fa-comment"></i></button>
+            <button id="repost"><i class="fa-solid fa-retweet"></i></button>              
+        </div>
+
+        <div class="post-data">
+            <a class="btn"><%= post.likes.length  %> Likes</a>
+            <br>
+            <a class="btn" onclick='comment("<%=post._id%>")'><%= post.comments.length %> Comments</a>
+        </div>
+
+        <div class="post-comments">
+            <% (post.comments).forEach(comment => { %>
+            <div>
+                <span><a href="/profile/<%= comment.username %> "><%= comment.username %></a> <%= comment.content %>.  <%= comment.likes %></span>                
+            </div>
+
+            <% }) %>                    
+        </div>
+
+    </div>    
                 <hr>
+
         <% } %>        
 
 
 
     <% }) %>
 
+    <footer>
+        <p>2023 Deeno Technologies &copy;</p>
+    </footer>
+        
+
 
     </div>
 
 
 
-
-
-
-    <!-- friends & messages -->
-    <!-- <div id="right-pane" class="col">
-        <div id="search-box">
-            <input type="text" placeholder="search">
-        </div>
-        <div id="friends-tab">
-            <div>
-                <h3>Friends</h3> <a href="/myfriends">more</a>
-            </div>
-            <div id="friends-list">
-                <ul>
-                    <li>
-                        <i class="fa-solid fa-user"></i> User 1
-                    </li>
-                    <li>
-                        <i class="fa-solid fa-user"></i> User 1
-                    </li>
-                    <li>
-                        <i class="fa-solid fa-user"></i> User 1
-                    </li>
-                    <li>
-                        <i class="fa-solid fa-user"></i> User 1
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </div> -->
-
-
     <input type="hidden" id="viewer-id" value="<%=thisUser._id%>">
+
 </div>
+
+
+
+    <div id="fixed-tab">
+        <a href="/home"><i class="fa-solid fa-house tab-icon"></i></a> 
+        <a href="/discover"><i class="fa-solid fa-magnifying-glass tab-icon"></i></a>
+        <a href="/upload"><i class="fa-solid fa-upload tab-icon"></i></a>
+        <a href="/messages"><i class="fa-regular fa-comment tab-icon"></i></a>
+        <a href="/profile/<%=thisUser.username%>"><i class="fa-regular fa-user tab-icon"></i></a>
+    </div>
+
+
+
 
 <script>
     // Query DOM 
-    const likeBtn = document.getElementById('like-btn');
+    const likeBtn = document.getElementsByClassName('like-btn');
     const commentInput = document.getElementById('comment-input');
     const commentSubmit = document.getElementById('comment-submit');
     const viewerId = document.getElementById('viewer-id');
 
+    const likeButtons = Array.from(likeBtn);
 
     // connect to server-side socket 
     const socket = io.connect(window.location.origin, {
@@ -235,12 +341,14 @@
     });    
 
 
-    // emit events 
-    likeBtn.addEventListener('click', function(btn){
-        socket.emit('like-post', {
-            postId : likeBtn.value,
-            likeId : viewerId.value,
-        })
+    // emit events
+    likeButtons.forEach(btn => {
+            btn.addEventListener('click', function(){
+            socket.emit('like-post', {
+                postId : btn.value,
+                likeId : viewerId.value,
+            })
+        });
     });
 
 
@@ -250,7 +358,7 @@
         document.getElementById('post-id').setAttribute('value', postId);
         await socket.on('show-comments', function(data){
             (data.comments).forEach(comment => {
-                document.getElementById('comments').innerHTML += '<div><a href=/profile/'+comment.username+'>'+comment.username+'</a> <span>'+comment.content+'</span></div>'
+                document.getElementById('comments').innerHTML += '<div id="comment"><a href=/profile/'+comment.username+'>'+comment.username+'</a> <span>'+comment.content+'</span></div>'
             });
         })
     };
@@ -270,4 +378,8 @@
 
 </script>
 
-<%- include('partials/footer.ejs') %>
+
+
+
+</body>
+</html>

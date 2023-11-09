@@ -21,17 +21,15 @@ body {
 }
 
 
-/* Left Showcase  */
 #left-showcase{
 /* background-color: rgba(0, 0, 255, 0.363); */
 text-align: center;
-padding: 50px 25px 80px 10px;
+padding: 40px 25px 80px 10px;
 }
 
 #showcase-title h1{
-    font-size: 40px;
-    font-style: italic;
-    font-family: Agbalumo;
+    font-size: 30px;
+    font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
     font-weight: bold;
 }
 

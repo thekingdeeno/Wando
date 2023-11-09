@@ -71,7 +71,6 @@ const io = socket(server, {
     });
     // function to tell user if username alredy exists 
     socket.on('createUsername', function(data) {
-      // console.log(data.newUsername)
 
       async function checkUsername() {
       const allUsernames = await User.find({username: data.newUsername})
@@ -114,7 +113,7 @@ const io = socket(server, {
 
   // WEBSOCKET SETUP FOR FOLLOW AND UNFOLLOW
     socket.on('profileFollow', function(data) {
-      console.log(data);
+
       async function profileFollow (){
         const newFollower = await User.findById(data.follower);
         const profile = await User.findById(data.profile);
@@ -166,7 +165,7 @@ const io = socket(server, {
   // WEBSOCKET SETUP FOR MESSAGES PAGE
 
     socket.on('msgSearch', function(data){
-        console.log(data)
+
         async function search(){
           
           const msgUsers = [] 
@@ -273,8 +272,6 @@ const io = socket(server, {
 
           if ((foundPost.likes).includes(data.likeId)) {
             (foundPost.likes).forEach(like => {
-              console.log('2');
-              console.log(like,data.likeId);
               if (like.toString()===(data.likeId).toString()) {
                 const likeIndex = (foundPost.likes).indexOf(like);
                 foundPost.likes.splice(likeIndex, 1);
@@ -295,14 +292,12 @@ const io = socket(server, {
 
       // SOCKET SETUP FOR POST COMMENTS
       socket.on('show-comments', function(postId){
-        console.log(postId);
         Post.findById(postId).then(function(foundPost) {
           socket.emit('show-comments', foundPost)
         });
       });
 
       socket.on('new-comment', function(data){
-        console.log(data);
 
         async function postComment(){
           const post = await Post.findById(data.post);
