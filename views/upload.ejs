@@ -1,25 +1,127 @@
 <%- include('partials/header.ejs') %>
-<div>
-    <h1>new post</h1>
+
+<style>
+    #header{
+        text-align: center;
+        padding: 50px 0 20px 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    #header h1{
+        background-color: #40164b;
+        width: max-content;
+        padding: 20px;
+        border-radius: 10px;
+    }
+
+    #upload-form{
+        padding: 10px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    #upload-form form{
+        background-color: rgba(165, 42, 42, 0.397);
+        padding: 30px;
+        text-align: center;
+        border-radius: 10px;
+        box-shadow: rgba(0, 0, 0, 0.25) 0px 0.0625em 0.0625em, rgba(0, 0, 0, 0.25) 0px 0.125em 0.5em, rgba(255, 255, 255, 0.1) 0px 0px 0px 1px inset;
+    }
+
+    @media  (min-width: 1366px) {
+        #upload-form form{
+            background-color: rgba(165, 42, 42, 0.397);
+            padding: 30px;
+            text-align: center;
+            border-radius: 10px;
+            box-shadow: rgba(0, 0, 0, 0.25) 0px 0.0625em 0.0625em, rgba(0, 0, 0, 0.25) 0px 0.125em 0.5em, rgba(255, 255, 255, 0.1) 0px 0px 0px 1px inset;
+            width: 70%;
+        }
+    }
+
+    #upload-form form h4{
+        padding: 0 0 10px 0;
+    }
+
+    @media  (min-width: 1366px) {
+        #upload-form form input{
+            width: 80%;
+            padding: 10px;
+            border-radius: 10px;
+            border: none;
+        }
+
+        #upload-form form textarea{
+            width: 80%;
+            padding: 10px;
+            border-radius: 10px;
+            border: none;
+            margin-top: 20px;
+        }
+
+    }
+
+    #upload-form form input{
+        padding: 10px;
+        border-radius: 10px;
+        border: none;
+    }
+
+    #upload-form form textarea{
+        padding: 10px;
+        border-radius: 10px;
+        border: none;
+        margin-top: 20px;
+        resize: none;
+        overflow-y: hidden;
+    }
+
+    #upload-form form button{
+        margin: 10px;
+    }
+
+</style>
+
+
+<div id="header">
+    <h1><i class="fa-solid fa-icons fa-sm"style="color: #ffffff;"></i> Upload <i class="fa-solid fa-upload tab-icon fa-sm"></i></h1>
 </div>
 
-<div>
+<div id="upload-form">
     <form action="/upload" method="POST">
+        <h4>Whats on your mind?</h4>
         <div>
-            <input type="text" name="title" placeholder="title">
+            <input type="text" name="title" placeholder="Title">
         </div>
         <div>
-            <h5>Content</h5>
+            <textarea name="content" id="" cols="0" rows="1" placeholder="Content"></textarea>
         </div>
         <div>
-            <textarea name="content" id="" cols="0" rows="0"></textarea>
-        </div>
-        
-        <!-- <input type="image" src="" alt=""> -->
-        <div>
-            <button type="submit">Post</button>
+            <button class="btn btn-dark" type="submit">Post</button>
         </div>
         
     </form>
 </div>
-<%- include('partials/footer.ejs') %>
+
+<div id="fixed-tab">
+    <a href="/home"><i class="fa-solid fa-house tab-icon"></i></a> 
+    <a href="/discover"><i class="fa-solid fa-magnifying-glass tab-icon"></i></a>
+    <a href="/upload"><i class="fa-solid fa-upload tab-icon" style="color: rgb(182, 70, 70);"></i></a>
+    <a href="/messages"><i class="fa-regular fa-comment tab-icon"></i></a>
+    <a href="/profile"><i class="fa-regular fa-user tab-icon"></i></a>
+</div>
+
+<script>
+    let textArea = document.querySelector("textarea")
+
+textArea.addEventListener("input", () => {
+    textArea.style.height = "auto"
+    textArea.style.height = textArea.scrollHeight + "px"
+})
+</script>
+
+</body>
+</html>

@@ -1,17 +1,122 @@
 <%- include('partials/header.ejs') %>
 
-<h1>Discover</h1>
+<style>
 
-<form action="/discover" method="post">
-    <div>
-        <input id="search-input" name="search" type="text" placeholder="Search">
-        <button id="submit-btn" type="submit">Search</button>
-    </div>
-</form>
+    #header{
+        text-align: center;
+        padding: 80px 0 20px 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
 
-<div id="search-results">
+    #header h1{
+        background-color: #40164b;
+        width: max-content;
+        padding: 20px;
+        border-radius: 10px;
+    }
 
+    #search-form{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    @media  (min-width: 1366px) {
+        #search-form input{
+            width: 500px;
+            padding: 10px;
+            border-radius: 10px;
+            border: none;
+        }
+    }
+
+    #search-form input{
+        padding: 10px;
+        border-radius: 10px;
+        border: none;
+    }
+
+
+    #search-results-block{
+        /* background-color: aqua; */
+        padding: 30px;
+    }
+
+    @media (min-width: 1366px) {
+        #search-results-block{
+        /* background-color: aqua; */
+        padding: 30px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    }
+
+    #search-results{
+        /* background-color: white; */
+        background-color: rgba(165, 42, 42, 0.397);
+        border-radius: 10px;
+        box-shadow: rgba(0, 0, 0, 0.25) 0px 0.0625em 0.0625em, rgba(0, 0, 0, 0.25) 0px 0.125em 0.5em, rgba(255, 255, 255, 0.1) 0px 0px 0px 1px inset;
+    }
+
+    @media  (min-width: 1366px) {
+        #search-results{
+            background-color: rgba(165, 42, 42, 0.397);
+            /* background-color: white; */
+            border-radius: 10px;
+            width: 500px;
+            margin: 0px;
+        }
+    }
+
+    #search-results a{
+        color: rgb(255, 255, 255);
+        font-weight: 400;
+        text-decoration: none;
+    }
+
+    #search-results p{
+        margin: 0px;
+        padding: 10px 10px 10px 15px;
+        border-radius: 10px;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.082);
+    }
+
+    #search-results :hover{
+        background-color: rgba(78, 20, 20, 0.397);
+    }
+
+
+
+    footer{
+        padding: 50px 0 0 0;
+    }
+
+    
+</style>
+
+
+<div id="header">
+    <h1><i class="fa-solid fa-icons " style="color: #ffffff;"></i> Discover <i class="fa-solid fa-magnifying-glass fa-flip-horizontal fa-sm tab-icon"></i></h1>
 </div>
+
+<div id="search-form">
+    <form action="/discover" method="post">
+            <input id="search-input" name="search" type="text" placeholder="Search" autocomplete="off">
+            <!-- <button id="submit-btn" type="submit">Search</button> -->
+    </form>
+</div>
+
+
+
+<div id="search-results-block">
+    <div id="search-results">
+
+    </div>
+</div>
+
 
 
 
@@ -54,7 +159,7 @@ document.addEventListener('keyup', function(event){
         searchResults.innerHTML = ""
         data.forEach(user => {
             searchResults.innerHTML +=
-        "<div id=foundUser><p><a href=/profile/"+user.username+">"+user.username+"</a></p></div>"
+        "<a href=/profile/"+user.username+"><p>@"+user.username+"</p></a>"
         });
         if (data.length === 0) {
             searchResults.innerHTML = ""
@@ -69,9 +174,13 @@ document.addEventListener('keyup', function(event){
 
 </script>
 
+<footer>
+    <p>2023 Deeno Technologies &copy;</p>
+</footer>
+
 <div id="fixed-tab">
     <a href="/home"><i class="fa-solid fa-house tab-icon"></i></a> 
-    <a href="/discover"><i class="fa-solid fa-magnifying-glass tab-icon"></i></a>
+    <a href="/discover"><i class="fa-solid fa-magnifying-glass tab-icon" style="color: rgb(182, 70, 70);"></i></a>
     <a href="/upload"><i class="fa-solid fa-upload tab-icon"></i></a>
     <a href="/messages"><i class="fa-regular fa-comment tab-icon"></i></a>
     <a href="/profile/"><i class="fa-regular fa-user tab-icon"></i></a>
