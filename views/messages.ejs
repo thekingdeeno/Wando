@@ -1,119 +1,240 @@
 <%- include('partials/header.ejs') %>
 
+<style>
+    #header{
+        text-align: center;
+        padding: 20px 0 0px 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    #header h1{
+        background-color: #40164b;
+        width: max-content;
+        padding: 20px;
+        border-radius: 10px;
+    }
+
+    /* for no messages  */
+
+    #no-chats{
+        /* background-color: rgba(165, 42, 42, 0.397); */
+        width: max-content;
+        border-radius: 10px;
+    }
+
+    #instruction{
+        text-align: center;
+        padding: 30px;
+        background-color: #40164b;
+        border-radius: 10px;
+        margin: 20px 20px;
+        box-shadow: rgba(0, 0, 0, 0.25) 0px 0.0625em 0.0625em, rgba(0, 0, 0, 0.25) 0px 0.125em 0.5em, rgba(255, 255, 255, 0.1) 0px 0px 0px 1px inset;
+    }
+
+    #search-form{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 5px;
+    }
+
+    #search-form input{
+        border: none;
+        margin: none;
+        padding: 5px;
+        border-radius: 10px;
+    }
+
+    @media (min-width: 1366px) {
+        #search-form input{
+            width: 500px;
+        }
+    }
+
+    #search-form button{
+        padding: 4px;
+        border-radius: 10px;
+    }
+
+    #search-results-block{
+        padding: 30px;
+    }
+
+    @media (min-width: 1366px) {
+            #search-results-block{
+            padding: 30px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+    }
+
+    #search-results{
+        background-color: rgba(165, 42, 42, 0.397);
+        border-radius: 10px;
+        box-shadow: rgba(0, 0, 0, 0.25) 0px 0.0625em 0.0625em, rgba(0, 0, 0, 0.25) 0px 0.125em 0.5em, rgba(255, 255, 255, 0.1) 0px 0px 0px 1px inset;
+    }
+
+    @media  (min-width: 1366px) {
+        #search-results{
+            background-color: rgba(165, 42, 42, 0.397);
+            border-radius: 10px;
+            width: 70%;
+            margin: 0px;
+        }
+    }
+
+    #search-results a{
+        color: rgb(255, 255, 255);
+        font-weight: 400;
+        text-decoration: none;
+    }
+
+    #search-results p{
+        margin: 0px;
+        border-radius: 10px;
+        padding: 5px;
+        /* border-bottom: 1px solid rgba(0, 0, 0, 0.082); */
+    }
+
+    #search-results :hover{
+        background-color: rgba(78, 20, 20, 0.397);
+        border-radius: 10px;
+    }
 
 
-<div class="row">
-    <div id="side-bar" class="col">
-        <h1><a href="/">Wando</a></h1>
-        <div id="tabs">
-            <div class="tab-btn">
-                <a href="/home"><i class="fa-solid fa-house"></i>Home</a>
-            </div>
-            <div class="tab-btn">
-                <a href="/discover"><i class="fa-solid fa-magnifying-glass"></i>Discover</a>
-            </div>
-            <!-- <div class="tab-btn">
-                <a href="/camps"><i class="fa-solid fa-fire"></i>Camps</a>
-            </div> -->
-            <div class="tab-btn">
-                <a href="/messages"><i class="fa-regular fa-envelope"></i>Messages</a>
-            </div>            
-            <div class="tab-btn">
-                <a href="/notification"><i class="fa-regular fa-comment"></i>Notifications</a>
-            </div>
-            <div class="tab-btn">
-                <a href="/upload"><i class="fa-solid fa-plus"></i>Post</a>
-            </div>
-            <div class="tab-btn">
-                <a href="/notification"><i class="fa-regular fa-user"></i>Profile</a>
-            </div>
-        </div>
-        <div id="more-options">
-            <button>more</button>
-        </div>
-    </div>
+    /* for messages  */
+
+    #message-page{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        /* background-color: blueviolet; */
+    }
+
+    #all-chats{
+        background-color: rgba(165, 42, 42, 0.397);
+        border-radius: 10px;
+        box-shadow: rgba(0, 0, 0, 0.25) 0px 0.0625em 0.0625em, rgba(0, 0, 0, 0.25) 0px 0.125em 0.5em, rgba(255, 255, 255, 0.1) 0px 0px 0px 1px inset;
+        padding: 10px;
+        /* border: 5px solid #74224D; */
+        width: 350px;
+    }
+
+    @media  (min-width: 1366px) {
+        #all-chats{
+            /* background-color: rgba(165, 42, 42, 0.397); */
+            padding: 10px;
+            width: 700px;
+        }
+    }
+
+    #all-chats h5{
+        text-align: center;
+    }
+
+    .chat a{
+        text-decoration: none;
+        color: white;
+    }
+
+    .chat-link {
+        padding: 10px;
+        border-radius: 10px;
+    }
+
+    .name{
+        font-size: larger;
+        font-weight: 600;
+    }
+
+    .message{
+        font-weight: 400;
+        color: rgb(192, 190, 190);
+    }
+
+    .message p{
+        margin: 0px;
+    }
+
+    .message small{
+        font-weight: 300;
+    }
+
+    .chat :hover{
+        background-color: #651C36;
+    }
+
+</style>
+
+
+
+<div id="header">
+    <h1><i class="fa-solid fa-icons " style="color: #ffffff;"></i> Messages <i class="fa-regular fa-comment tab-icon fa-sm"></i></h1>
+</div>
 
 
     
 
     <% if (chats.length===0) { %>
-    <div id="message-page" class="col">
-        <div>
-            <h1>@<%= myUsername %></h1>
+    <div id="message-page">
+        <div id="no-chats">
+            <div id="instruction">
+                <h2>Add Friends!</h2>
+                <p>You do not have any messages. Search for your friends and send them a message</p>
+            </div>
+                <div id="search-form">
+                    <div action="/messages" method="POST">
+                        <input name="search" id="search-input" type="text" placeholder="Username" autocomplete="off">
+                        <!-- <button class="btn btn-dark" id="search-btn" type="submit">Find</button> -->
+                    </div>
+                </div>
+            <div id="search-results-block">
+                <div id="search-results">
+                </div>
+            </div>        
         </div>
-        <div>
-            <h1>Send a DM</h1>
-        </div>
-        <div>
-            <form action="/messages" method="POST">
-                <input name="search" id="search-input" type="text" placeholder="search">
-                <button id="search-btn" type="submit">Find</button>
-            </form>
-        </div>
-        <div id="search-results">
+    </div>
 
-        </div>
-        <div id="messages">
-
-
-        </div>
-    </div>     
+ 
     <% }else{ %>
-        <div id="message-page" class="col">
-            <div>
-                <h1>@<%= myUsername %></h1>
-            </div>
-            <div>
-                <form action="/messages" method="POST">
-                    <input name="search" id="search-input" type="text" placeholder="search">
-                    <button id="search-btn" type="submit">Find</button>
-                </form>
-            </div>
 
-            <div id="search-results">
+    <div id="message-page">
 
-            </div>
+        <div id="all-chats">
 
-
-
-
+            <h5>Chats</h5>
+            <hr>
             <% chats.forEach(chat => { %>
 
-            <% (chat.users).forEach(user => { %>
 
-                <% if ((user.userId).toString() != myObjId.toString()) { %>
-            <div>
-                <div id="chat">
-                    <table>
-                        <tbody>
-                            <tr>
-                                <td><img src="" alt=""></td>
-                                <td>
-                                <h5>
-                                <a href="/chat/<%=chat._id%>"+> <%=user.userName%></a>
-                                </h5>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>  
-                <% } %>
 
+                <% (chat.users).forEach(user => { %>
+                    <% if ((user.userId).toString() != myObjId.toString()) { %>
+
+                        <!-- write a function to sort messages according to date here -->
+
+                        <div class="chat">
+                            <a href="/chat/<%=chat._id%>"+>
+                                <div class="chat-link">
+                                    <span class="name"><%=user.userName%></span>
+
+                                    <% if ((chat.messages[0]).authorName === myUsername) { %>
+                                        <div class="message">You: <small><%=(chat.messages[(chat.messages.length)-1]).text %></small></div>
+                                    <% }else{ %>
+                                        <div class="message"><small><%=(chat.messages[(chat.messages.length)-1]).text %></small></div>
+                                    <% } %>
+                                </div>  
+                            </a>
+                        </div>
+                    <% } %>
+                <% }) %>
             <% }) %>
-              
-
-          
-            <% }) %>
-
-
-
-
-            <div id="messages">
-    
-    
-            </div>
         </div>
+
+    </div>
     <% } %>
 
 
@@ -152,7 +273,7 @@ socket.on('msgUsers', function(data){
         searchResults.innerHTML = ""
         data.forEach(user => {
             searchResults.innerHTML +=
-        "<div id=foundUser><p><a href=/chat/newChat"+user._id+">"+user.username+"</a></p></div>"
+        "<a href=/chat/newChat"+user._id+"><div id=foundUser><p>"+user.username+"</p></div></a>"
         });
         if (data.length === 0) {
             searchResults.innerHTML = ""
@@ -165,4 +286,17 @@ socket.on('msgUsers', function(data){
 
 </script>
 
-<%- include('partials/footer.ejs') %>
+<footer>
+    <p>2023 Deeno Technologies &copy;</p>
+</footer>
+
+<div id="fixed-tab">
+    <a href="/home"><i class="fa-solid fa-house tab-icon"></i></a> 
+    <a href="/discover"><i class="fa-solid fa-magnifying-glass tab-icon"></i></a>
+    <a href="/upload"><i class="fa-solid fa-upload tab-icon"></i></a>
+    <a href="/messages"><i class="fa-regular fa-comment tab-icon" style="color: rgb(182, 70, 70);"></i></a>
+    <a href="/profile/<%=myUsername%>"><i class="fa-regular fa-user tab-icon"></i></a>
+</div>
+
+</body>
+</html>

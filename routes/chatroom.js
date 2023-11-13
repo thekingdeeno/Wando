@@ -30,7 +30,6 @@ router.get('/:searchParam', function(req, res){
     if (chatCall === "newChat") {
   
       const userSearchId = (req.params.searchParam).slice(7,31)
-      console.log();
   
       Chat.find({$and: [{"users.userId":(req.user).id},{"users.userId": userSearchId}]}).then(function(foundChat){
         
@@ -68,8 +67,9 @@ router.get('/:searchParam', function(req, res){
     }else{
   
       const chatUrl = req.params.searchParam
-  
-        Chat.findById(req.params.searchParam).then(function(foundChat){
+
+        async function renderChat(){
+          const foundChat = await Chat.findById(req.params.searchParam)
   
           const userArray = foundChat.users;
           userArray.forEach(user => {
@@ -89,9 +89,11 @@ router.get('/:searchParam', function(req, res){
   
           userDetails();
             }
-          });
-  
-        })
+          });            
+        }
+
+        renderChat();
+
         
     };
   });
