@@ -207,10 +207,11 @@
 
             <h5>Chats</h5>
             <hr>
+            
+            <% chats.sort((a,b)=> (a.messages[a.messages.length -1].sentAt) - (b.messages[a.messages.length -1].sentAt)) %>
+            <% chats.reverse() %>
+
             <% chats.forEach(chat => { %>
-
-
-
                 <% (chat.users).forEach(user => { %>
                     <% if ((user.userId).toString() != myObjId.toString()) { %>
 
