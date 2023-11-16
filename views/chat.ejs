@@ -1,64 +1,204 @@
 <%- include('partials/header.ejs') %>
 
-<input type="hidden" id="chatId" value="<%=wssConnect%>">
 
-<div>
-    <table>
-        <tbody>
-            <tr>
-                <td><img src="" alt=""></td>
-            </tr>
-            <tr>
-                <h1><%= recipientData.username %></h1>
-            </tr>
-        </tbody>
-    </table>
+<style>
+    #header{
+        position: fixed;
+        text-align: center;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: #40164b;     
+        width: 100%;   
+    }
+
+    #header h1{
+        width: max-content;
+        padding: 20px;
+        border-radius: 10px;
+    }
+
+    #messages{
+        /* overflow: scroll; */
+        padding: 100px 0 150px 0;
+    }
+
+    .chat-left{
+        padding: 0 0 0 50px;
+    }
+
+    @media (max-width: 720px) {
+        .chat-left{
+            padding: 0 0 0 10px;
+            font-size: 14px;
+        }
+    }
+
+    .chat-left p{
+        background-color: rgb(75, 75, 75);
+        padding: 10px;
+        width: max-content;
+        max-width: 80%;
+        border-radius: 15px 15px 15px 0px;
+        box-shadow: rgba(0, 0, 0, 0.25) 0px 14px 28px, rgba(0, 0, 0, 0.22) 0px 10px 10px;
+    }
+
+    @media  (min-width: 1366px) {
+        .chat-left p{
+            background-color: rgb(75, 75, 75);
+            padding: 10px;
+            width: max-content;
+            max-width: 60%;
+            border-radius: 15px 15px 15px 0px;
+            box-shadow: rgba(0, 0, 0, 0.25) 0px 14px 28px, rgba(0, 0, 0, 0.22) 0px 10px 10px;
+        }
+    }
+
+    .chat-right{
+        display: flex;
+        justify-content: right;
+        padding: 0 50px 0 0;
+    }
+
+    @media (max-width: 720px) {
+        
+        .chat-right{
+            display: flex;
+            justify-content: right;
+            padding: 0 10px 0 0;
+            font-size: 14px;
+        }
+
+    }
+
+    .chat-right p{
+        background-color: rgba(165, 42, 42, 0.397);
+        padding: 10px;
+        width: max-content;
+        max-width: 80%;
+        border-radius: 15px 15px 0px 15px;
+        box-shadow: rgba(0, 0, 0, 0.25) 0px 14px 28px, rgba(0, 0, 0, 0.22) 0px 10px 10px;
+    }
+
+    @media  (min-width: 1366px) {
+        .chat-right p{
+            background-color: rgba(165, 42, 42, 0.397);
+            padding: 10px;
+            width: max-content;
+            max-width: 60%;
+            border-radius: 15px 15px 0px 15px;
+            box-shadow: rgba(0, 0, 0, 0.25) 0px 14px 28px, rgba(0, 0, 0, 0.22) 0px 10px 10px;
+        }
+    }
+
+    #time{
+        font-size: 10px;
+        padding-left: 10px;
+    }
+
+    #send-message{
+        background-color: rgba(85, 28, 99, 0.753);
+        position: fixed;
+        bottom: 0;
+        padding-bottom: 100px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+    }
+
+    #send-message textarea{
+        padding: 5px;
+        border: none;
+        border-radius: 10px;
+        box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+        width: 80%;
+    }
+
+    @media  (min-width: 1366px) {
+        #send-message textarea{
+            padding: 5px;
+            border: none;
+            border-radius: 10px;
+            width: 600px;
+        }
+    }
+
+    #send-message button{
+        color: rgb(165, 42, 42);
+        background-color: wheat;
+        border-radius: 50%;
+        border: none;
+        padding: 5px 10px;
+        margin-left: 10px;
+        box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+    }
+
+    #send-message button:hover{
+        background-color: #301038;
+        color: wheat;
+        rotate: 40deg;
+        transition: 500ms;
+    }
+
+</style>
+
+
+
+
+
+
+<div id="header">
+    <h1> <%= recipientData.username %> <i class="fa-regular fa-comment fa-solid fa-sm"></i></h1>
 </div>
 
-<div id="messages">
-    <div id="is-typing">
+<br>
 
-    </div>
+<div id="messages">
+    <div id="is-typing"></div>
+
     <% (chatData.messages).forEach(message => { %>
         <% if ((message.authorId).toString() !== (senderData._id).toString()) { %>
-            <div id="db-chat" style="text-align: right;">
+            <div id="db-chat" class="db-chat chat-right" style="text-align: right;">
         <% }else{ %>
-            <div id="db-chat" style="text-align: left;"></div>
-        <% } %> 
-            
-                <p><%= message.authorName %>: <%= message.text %>  <em><%= (message.sentAt).toLocaleTimeString(); %></em></p>
+            <div id="db-chat" class="db-chat chat-left" style="text-align: left;">
+        <% } %>
+            <p><%= message.text %>  <em id="time"><%= (message.sentAt).toLocaleTimeString(); %></em></p>
+
             </div>
     <% }) %>
+
     <div id="chat">
 
     </div>
 </div>
 
-<div>
-        <div class="row">
 
-            <input id="senderId" type="hidden" name="senderId" value="<%= recipientData._id %>">
-            <input id="senderName" type="hidden" name="senderName" value="<%= senderData.username %>">
-            
-            <input id="recipientId" type="hidden" name="recipientId" value="<%= recipientData._id %>">
-            <input id="recipientName" type="hidden" name="recipientName" value="<%= recipientData.username %>">
+<div id="send-message">
+    <textarea id="message" name="message" type="text" placeholder=" Message" cols="0" rows="1"></textarea>
+    <button id="send"><i class="fa-solid fa-paper-plane"></i></button>
+</div>
 
-            <div><input id="message" name="message" type="text" placeholder="message"></div>
+                
 
-                <button id="send"><i class="fa-solid fa-paper-plane"></i>send</button>
-        </div>
+
+<div id="fixed-tab">
+    <a href="/home"><i class="fa-solid fa-house tab-icon"></i></a> 
+    <a href="/discover"><i class="fa-solid fa-magnifying-glass tab-icon"></i></a>
+    <a href="/upload"><i class="fa-solid fa-upload tab-icon"></i></a>
+    <a href="/messages"><i class="fa-regular fa-comment tab-icon" style="color: rgb(182, 70, 70);"></i></a>
+    <a href="/profile/"><i class="fa-regular fa-user tab-icon"></i></a>
 </div>
 
 
 
-
-
-
-
-
-
-
-
+<!-- Hidden Inputs -->
+<input id="chatId" type="hidden" value="<%=wssConnect%>">
+<input id="senderId" type="hidden" name="senderId" value="<%= recipientData._id %>">
+<input id="senderName" type="hidden" name="senderName" value="<%= senderData.username %>">
+<input id="recipientId" type="hidden" name="recipientId" value="<%= recipientData._id %>">
+<input id="recipientName" type="hidden" name="recipientName" value="<%= recipientData.username %>">
+<!-- Hidden Inputs -->
 
 
 
@@ -103,17 +243,18 @@ btn.addEventListener('click', function(){
 });
 
 message.addEventListener('keypress', function(){
-    socket.emit('typing', {
-        typer: senderName.value,
-        room: chatId
-    })
+    // socket.to(chatId).emit('typing', {
+    //     typer: senderName.value,
+    //     room: chatId
+    // })
+    socket.emit('typing', {room: chatId, typer: senderName.value});
 })
 
 
 // Listening for emit 
 socket.on('chat', function(data){
     isTyping.innerHTML = ""
-    output.innerHTML += "<p>"+ data.senderName+ ":" + data.message+"</p>";
+    // output.innerHTML += "<p>"+ data.senderName+ ":" + data.message+"</p>";
     if (message.value === "") {
         isTyping.innerHTML = ""
     }
@@ -127,13 +268,25 @@ socket.on('disconnect', function(){
 });
 
 socket.on('typing', function(data){
-    isTyping.innerHTML = "<p><em>"+ data.typer +" is typing...</em></p>"
+    console.log(data)
+    if (data.typer===recipientName) {
+        isTyping.innerHTML = "<p><em>"+ data.typer +" is typing...</em></p>";
+    }
     if (message.value === "") {
         isTyping.innerHTML = ""
     }
 });
 
 
+let textArea = document.querySelector("textarea")
+
+textArea.addEventListener("input", () => {
+    textArea.style.height = "auto"
+    textArea.style.height = textArea.scrollHeight + "px"
+})
+
+
 </script>
 
-<%- include('partials/footer.ejs') %>
+</body>
+</html>
