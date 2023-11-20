@@ -94,10 +94,10 @@
     <form action="/upload" method="POST">
         <h4>Whats on your mind?</h4>
         <div>
-            <input type="text" name="title" placeholder="Title">
+            <input type="text" name="title" placeholder="Title" required>
         </div>
         <div>
-            <textarea name="content" id="" cols="0" rows="1" placeholder="Content"></textarea>
+            <textarea name="content" id="" cols="0" rows="1" placeholder="Content" required></textarea>
         </div>
         <div>
             <button class="btn btn-dark" type="submit">Post</button>
@@ -111,7 +111,7 @@
     <a href="/discover"><i class="fa-solid fa-magnifying-glass tab-icon"></i></a>
     <a href="/upload"><i class="fa-solid fa-upload tab-icon" style="color: rgb(182, 70, 70);"></i></a>
     <a href="/messages"><i class="fa-regular fa-comment tab-icon"></i></a>
-    <a href="/profile"><i class="fa-regular fa-user tab-icon"></i></a>
+    <a href="/profile/<%=username%>"><i class="fa-regular fa-user tab-icon"></i></a>
 </div>
 
 <script>

@@ -1,222 +1,486 @@
 <%- include('partials/header.ejs') %>
 
-<div class="row">
-    <!-- side bar buttons  -->
-    <div class="left-pane col">
-        <h1><a href="/">Wando</a></h1>
-        <div id="tabs">
-            <div class="tab-btn">
-                <a href="/home"><i class="fa-solid fa-house"></i>Home</a>
-            </div>
-            <div class="tab-btn">
-                <a href="/discover"><i class="fa-solid fa-magnifying-glass"></i>Discover</a>
-            </div>
-            <!-- <div class="tab-btn">
-                <a href="/camps"><i class="fa-solid fa-fire"></i>Camps</a>
-            </div> -->
-            <div class="tab-btn">
-                <a href="/messages"><i class="fa-regular fa-envelope"></i>Messages</a>
-            </div>            
-            <div class="tab-btn">
-                <a href="/notifications"><i class="fa-regular fa-comment"></i>Notifications</a>
-            </div>
-            <div class="tab-btn">
-                <a href="/upload"><i class="fa-solid fa-plus"></i>Post</a>
-            </div>
-            <div class="tab-btn">
-                <a href="http://"><i class="fa-regular fa-user"></i>Profile</a>
-            </div>
+<style>
+    #comment-overlay{
+        background-color: rgba(0, 0, 0, 0.637);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        position: fixed;
+        z-index: 1;
+        width: 100%;
+        height: 100%;
+    }
+    #comment-box{
+        background-color: rgb(92, 28, 61);
+        text-align: center;
+        border-radius: 15px;
+        box-shadow: rgba(0, 0, 0, 0.25) 0px 0.0625em 0.0625em, rgba(0, 0, 0, 0.25) 0px 0.125em 0.5em, rgba(255, 255, 255, 0.1) 0px 0px 0px 1px inset;
+        padding: 20px;
+        border: 5px solid rgb(92, 28, 61);
+    }
+
+    @media  (min-width: 1366px) {
+        #comment-box{
+            background-color: rgb(92, 28, 61);
+            text-align: center;
+            border-radius: 15px;
+            box-shadow: rgba(0, 0, 0, 0.25) 0px 0.0625em 0.0625em, rgba(0, 0, 0, 0.25) 0px 0.125em 0.5em, rgba(255, 255, 255, 0.1) 0px 0px 0px 1px inset;
+            padding: 20px;
+            width: 800px;
+        }
+    }
+
+    #comments{
+        text-align: left;
+    }
+
+    #comments span{
+        font-weight: 200;
+        font-size: 14px;
+    }
+
+    #comments a{
+        color: white;
+        font-weight: 600;
+        text-decoration: none;
+    }
+
+    #comment-box input{
+        margin: 10px 10px 0 0;
+        padding: 5px;
+        border-radius: 5px;
+        border: none;
+    }
+
+    @media  (min-width: 1366px) {
+        #comment-box input{
+            width: 40%;
+        }
+    }
+
+    #comment-box button{
+        padding: 0px;
+        color: white;
+        background-color: transparent;
+        border: none;
+    }
+
+    #comment-box button:hover{
+        color: rgb(182, 70, 70);
+    }
+
+    #search-area{
+        display: flex;
+        justify-content: center;
+        padding: 20px;
+    }
+
+
+
+
+    #profile-header{
+        padding: 20px;
+        text-align: center;
+    }
+
+    #bio{
+        font-weight: 200;
+    }
+
+    #header{
+        text-align: center;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    #header h1{
+        background-color: #40164b;
+        width: max-content;
+        padding: 20px;
+        border-radius: 10px;
+    }
+
+    #profile-header span{
+        font-size: 13px;
+        font-weight: 200;
+        padding-right: 10px;
+    }
+
+    #follow-button{
+        background-color: rgb(14, 105, 158);
+        color: white;
+        border: none;
+        border-radius: 5px;
+        padding: 6px;
+    }
+
+    #unfollow-button{
+        color: white;
+        background-color: black;
+        border: none;
+        border-radius: 5px;
+        padding: 6px;
+    }
+
+    #edit-profile-button{
+        color: white;
+        background-color: black;
+        border: none;
+        border-radius: 5px;
+        padding: 6px;
+    }
+
+    #edit-profile-button a{
+        text-decoration: none;
+        color: white;
+    }
+
+
+    #message-button{
+        background-color: black;
+        border: none;
+        border-radius: 5px;
+        padding: 6px;
+        margin-left: 5px;
+    }
+
+    #message-button a{
+        text-decoration: none;
+        color: white;
+    }
+
+
+
+
+    #all-posts{
+        padding: 10px 10px 10px 10px;
+        width: fit-content;
+    }
+
+    .post{
+        background-color: rgba(165, 42, 42, 0.397);
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: rgba(0, 0, 0, 0.25) 0px 0.0625em 0.0625em, rgba(0, 0, 0, 0.25) 0px 0.125em 0.5em, rgba(255, 255, 255, 0.1) 0px 0px 0px 1px inset;
+    }
+
+    @media  (min-width: 1366px) {
+        .post{
+            width: 700px;
+        }
+    }
+
+    .post a{
+        text-decoration: none;
+    }
+
+    .post-header{
+        padding: 0 0 10px 10px;
+    }
+
+    .post-header a{
+        color: white;
+        font-weight: 600;
+        padding: 0 0 0 6px;
+    }
+
+    .post-header button{
+        float: right;
+        padding: 0 10px;
+    }
+
+    .post-title{
+        font-size: 20px;
+    }
+    
+    .post-content{
+        font-size: 14px;
+        font-weight: 300;
+    }
+
+    .icons button{
+        background-color: rgba(255, 235, 205, 0);
+        padding: 0px;
+        border: 0px;
+        font-size: 20px;
+    }
+
+    #comment-btn{
+        padding: 0 7px;
+    }
+
+    .icons i{
+        color: white;
+    }
+
+    .icons i:hover{
+        color: rgb(157, 111, 168);
+    }
+    
+    .post-data{
+        padding: 10px 0px 10px 0;
+    }
+
+    .post-data a{
+        font-size: 14px;
+        font-weight: 400;
+        color: rgba(255, 255, 255, 0.575);
+        padding: 0px;
+    }
+
+    .post-comments span{
+        font-weight: 200;
+        font-size: 14px;
+    }
+
+    .post-comments a{
+        color: white;
+        font-weight: 600;
+    }
+
+
+
+</style>
+
+<div id="comment-overlay" style="display: none;">
+    <div id="comment-box">
+        <h4>Comments</h4>
+        <hr>
+        <div id="comments">
+            <input type="hidden" id="post-id" value="">              
         </div>
-        <div id="more-options">
-            <button>more</button>
-        </div>
+
+        
+        <div>
+            <input type="text" id="comment-input" name="comment" autocomplete="off" placeholder=" Comment">
+            <button class="btn btn-light" id="comment-submit" value=""><i class="fa-solid fa-paper-plane"></i></button>
+        </div>            
     </div>
 
+</div>
+
+<nav class="navbar navbar-expand-lg " style="background-color: rgb(64, 22, 75);">
+    <div class="container-fluid" id="navbar">
+        <a class="navbar-brand" href="/" style="color: white;"><i class="fa-solid fa-icons fa-2xl"></i> Wando</a>
+    </div>
+</nav>
+
+<div id="profile-header">
+    <div id="header">
+        <h1><%=profileInfo.username%></h1>
+    </div>
+    <p><%=profileInfo.fullname%></p>
+    <% if (profileInfo.bio) { %>
+        <p id="bio"><%=profileInfo.bio%></p>         
+    <% } %>
 
 
-    <!-- claver posts -->
-    <div class="middle-pane col">
-        <h1>Wando</h1>
-    <div id="user-data">
+    <p><%=postArray.length%> <span>Posts</span>  <%=(profileInfo.followers).length%> <span>Followers</span> <%=(profileInfo.following).length%> <span>Following</span></p>
 
-        <img id="user-dp" src="/images/ceo.jpg" alt="">
-        <h1><%=profileInfo.fullname%></h1>
-        <p>@<%=profileInfo.username%></p>
-        <% if (profileInfo.bio) { %>
-            <p><%=profileInfo.bio%></p>         
-        <% } %>
-
-
-        <p><%=postArray.length%> Posts  <%=(profileInfo.followers).length%> Followers <%=(profileInfo.following).length%> Following</p>
-
-        <% if ((viewerInfo._id).toString() === (profileInfo._id).toString()) { %>
-         <button><a href="/profileedit">Edit Profile</a></button>
+    <% if ((viewerInfo._id).toString() === (profileInfo._id).toString()) { %>
+        <button id="edit-profile-button"><a href="/profileedit">Edit Profile</a></button>
+    <% } else { %>
+        <% if ((viewerInfo.following).includes(profileInfo._id)) { %>
+            <button id="unfollow-button">Following</button>             
         <% } else { %>
-            <% if ((viewerInfo.following).includes(profileInfo._id)) { %>
-                <button id="unfollow-button">Following</button>             
-            <% } else { %>
-                <button id="follow-button">Follow</button>
-            <% } %>
-
-        <input type="hidden" id="profileId" value="<%=(profileInfo._id).toString()%>">
-        <input type="hidden" id="viewerId" value="<%=(viewerInfo._id).toString()%>">
-        <button><a href="/chat/newChat<%=(profileInfo._id).toString()%>">Message</a></button>
+            <button id="follow-button">Follow</button>
         <% } %>
 
+    <input type="hidden" id="profileId" value="<%=(profileInfo._id).toString()%>">
+    <input type="hidden" id="viewerId" value="<%=(viewerInfo._id).toString()%>">
+    <button id="message-button"><a href="/chat/newChat<%=(profileInfo._id).toString()%> ">Message</a></button>
+    <% } %>
+</div>
 
-    </div>
 
-    <div id="posts">
-        <button>posts</button> <button>likes</button> <button>tags</button>
 
+
+
+
+    <div class="">
+        <div id="all-posts" class="container-fluid">
+    
+    
+    
         <% postArray.forEach(post => { %>
-
-
+    
+    
             <% if (post.image) { %>
-        <div class="card text-bg-dark mb-3 post" style="width: 18rem;">
-            <div class="card-header">
+                <!-- copy content from below and add image from db on top  -->
+            <% } else { %>
+    
+    
+        <div class="post">
+    
+            <div class="post-header">
                 <i class="fa-solid fa-user"></i> 
                 <a href="/profile/<%= post.authorUsername %>"><%= post.authorUsername %></a>
-                <button id="follow-button" type="submit">follow</button>
-            </div>
-            <img src="" class="card-img-top" alt="...">
-            <div class="card-body">
-                <h5 class="card-title"><%= post.title %></h5>
-                <p class="card-text"><%= post.content %></p>
+                
+                <!-- <button class="btn btn-light follow-button" type="submit">Follow</button> -->
             </div>
     
-            <ul class="list-group list-group-flush">
-                <li class="list-group-item">
-                    <i class="fa-regular fa-heart"></i>
-                    <i class="fa-regular fa-comment"></i>
-                    <i class="fa-solid fa-retweet"></i>
-                    <i class="fa-regular fa-share-from-square"></i>
-                </li>
-                <li class="list-group-item">
-                    <a href= "postname/likes"><%= post.likes.length  %> Likes</a>
-                    <!-- <p class="post-caption"><a href="/profile">user_name</a> Lorem ipsum dolor sit</p> -->
+            <hr>
     
-                    <p class="post-comments"><a href="/postname/comments"><%= post.comments.length %> users commented</a></p>
-    
-                    <% (post.comments).forEach(comment => { %>
-                    <p><a href="/profile"><%= comment.username %></a> <%= comment.content %>.  <%= comment.likes %> Likes</p>
-                    <% }) %>>
-    
-    
-                </li>
-                <li class="list-group-item ">
-                    <form action="/post" method="post">
-                        <input type="text" name="comment" id="" placeholder="comment...">
-                    </form>
-                </li>
-            </ul>
-    
+            <div class="post-body">
+                <h5 class="post-title"><%= post.title %></h5>
+                <p class="post-content"><%= post.content %></p>
             </div>
-            <hr>         
-            <% } else { %>
-                <div class="card text-bg-dark mb-3 post" style="width: 18rem;">
-                    <div class="card-header">
-                        <i class="fa-solid fa-user"></i> 
-                        <a href="/profile/<%= post.authorUsername %>"><%= post.authorUsername %></a>
-                        <button id="follow-button" type="submit">follow</button>
-                    </div>
-                    <div class="card-body">
-                        <h5 class="card-title"><%= post.title %></h5>
-                        <p class="card-text"><%= post.content %></p>
-                    </div>
-            
-                    <ul class="list-group list-group-flush">
-                        <li class="list-group-item">
-                            <button><i class="fa-regular fa-heart"></i></button>
-                            <button><i class="fa-regular fa-comment"></i></button>
-                            <button><i class="fa-solid fa-retweet"></i></button>
-                            <button><i class="fa-regular fa-share-from-square"></i></button>
-                            
-                        </li>
-                        <li class="list-group-item">
-                            <a href= "postname/likes"><%= post.likes.length  %> Likes</a>
-                            <!-- <p class="post-caption"><a href="/profile">user_name</a> Lorem ipsum dolor sit</p> -->
-            
-                            <p class="post-comments"><a href="/postname/comments"><%= post.comments.length %> users commented</a></p>
-            
-                            <% (post.comments).forEach(comment => { %>
-                            <p><a href="/profile/<%= comment.username %> "><%= comment.username %></a> <%= comment.content %>.  <%= comment.likes %> Likes</p>
-                            <% }) %>
-                        </li>
-                    </ul>
-            
-                    </div>
+    
+            <div class="icons">
+                <% if ((post.likes).includes(viewerInfo._id)) { %>
+                    <button class="like-btn" value="<%=post._id%>"><i class="fa-solid fa-heart" style="color: rgb(236, 47, 47);"></i></button>                         
+                <% }else{ %>
+                    <button class="like-btn" value="<%=post._id%>"><i class="fa-regular fa-heart"></i></button>
+                <% } %>
+    
+                <button id="comment-btn" value="<%=post._id%>" onclick='comment("<%=post._id%>")'><i class="fa-regular fa-comment"></i></button>
+                <button id="repost"><i class="fa-solid fa-retweet"></i></button>              
+            </div>
+    
+            <div class="post-data">
+                <a class="btn"><%= post.likes.length  %> Likes</a>
+                <br>
+                <a class="btn" onclick='comment("<%=post._id%>")'><%= post.comments.length %> Comments</a>
+            </div>
+    
+            <div class="post-comments">
+                <% (post.comments).forEach(comment => { %>
+                <div>
+                    <span><a href="/profile/<%= comment.username %> "><%= comment.username %></a> <%= comment.content %>.  <%= comment.likes %></span>                
+                </div>
+    
+                <% }) %>                    
+            </div>
+    
+        </div>    
                     <hr>
+    
             <% } %>        
     
     
     
         <% }) %>
-    </div>
-
-    </div>
-
-
-
-
-
-
-    <!-- friends & messages -->
-    <div class="right-pane col">
-        <div id="search-box">
-            <input type="text" placeholder="search">
+    
+        <footer>
+            <p>2023 Deeno Technologies &copy;</p>
+        </footer>
+            
+    
+    
         </div>
-        <div id="friends-tab">
-            <div>
-                <h3>Friends</h3> <a href="/myfrieands">more</a>
-            </div>
-            <div id="friends-list">
-                <ul>
-                    <li>
-                        <i class="fa-solid fa-user"></i> User 1
-                    </li>
-                    <li>
-                        <i class="fa-solid fa-user"></i> User 1
-                    </li>
-                    <li>
-                        <i class="fa-solid fa-user"></i> User 1
-                    </li>
-                    <li>
-                        <i class="fa-solid fa-user"></i> User 1
-                    </li>
-                </ul>
-            </div>
-        </div>
+    
+    
+    
+        <input type="hidden" id="viewer-id" value="<%=viewerInfo._id%>">
+        <input type="hidden" id="profileId" value="<%=(profileInfo._id).toString()%>">
+        <input type="hidden" id="viewerId" value="<%=(viewerInfo._id).toString()%>">
+    
     </div>
+
+
+
+    <script>
+        // Query DOM 
+        const likeBtn = document.getElementsByClassName('like-btn');
+        const commentInput = document.getElementById('comment-input');
+        const commentSubmit = document.getElementById('comment-submit');
+        const followButton = document.getElementById('follow-button');
+        const unfollowButton = document.getElementById('unfollow-button');
+        const viewerId = document.getElementById('viewer-id').value;
+        const profileId = document.getElementById('profileId').value;
+    
+        const likeButtons = Array.from(likeBtn);
+    
+        // connect to server-side socket 
+        const socket = io.connect(window.location.origin, {
+            transports: ["websocket","webtransport"],
+            addTrailingSlash: false,
+        });
+    
+    
+        // function to remove comment window
+        document.addEventListener('click', function(event){
+            if(event.target.id === "comment-overlay"){
+                document.getElementById('comment-overlay').style = "display: none;"
+                document.getElementById('comments').innerHTML = "";
+                document.getElementById('post-id').setAttribute('value', "");
+            };
+        });    
+    
+    
+        // emit events
+
+            // Emit Events 
+        likeButtons.forEach(btn => {
+                btn.addEventListener('click', function(){
+                socket.emit('like-post', {
+                    postId : btn.value,
+                    likeId : viewerId,
+                })
+            });
+        });
+    
+    
+        async function comment(postId){
+            socket.emit('show-comments', postId);
+            document.getElementById('comment-overlay').style = "display: flex;";
+            document.getElementById('post-id').setAttribute('value', postId);
+            await socket.on('show-comments', function(data){
+                (data.comments).forEach(comment => {
+                    document.getElementById('comments').innerHTML += '<div id="comment"><a href=/profile/'+comment.username+'>'+comment.username+'</a> <span>'+comment.content+'</span></div>'
+                });
+            })
+        };
+    
+        commentSubmit.addEventListener('click', function(e){
+            console.log(e);
+            socket.emit('new-comment', {
+                post: document.getElementById('post-id').value,
+                user: viewerId.value,
+                comment: commentInput.value,
+            });
+            // document.getElementById('comment-overlay').style = "display: none;"
+        });
+
+        try {
+            followButton.addEventListener('click', function(){
+                socket.emit('profileFollow', {
+                    follower: viewerId,
+                    profile: profileId,
+                });
+            });            
+        } catch (error) {
+            console.log(error)
+        }
+
+        try {
+            unfollowButton.addEventListener('click', function(){
+                socket.emit('profileUnfollow', {
+                    follower: viewerId,
+                    profile: profileId,
+                });
+            });            
+        } catch (error) {
+            console.log(error)
+        }
+
+
+
+    
+    
+    
+    
+    </script>
+
+<div id="fixed-tab">
+    <a href="/home"><i class="fa-solid fa-house tab-icon"></i></a> 
+    <a href="/discover"><i class="fa-solid fa-magnifying-glass tab-icon"></i></a>
+    <a href="/upload"><i class="fa-solid fa-upload tab-icon"></i></a>
+    <a href="/messages"><i class="fa-regular fa-comment tab-icon"></i></a>
+    <a href="/profile/<%=viewerInfo.username%>"><i class="fa-regular fa-user tab-icon" style="color: rgb(182, 70, 70);"></i></a>
 </div>
 
-<script>
-    const followButton = document.getElementById('follow-button');
-    const unfollowButton = document.getElementById('unfollow-button');
-    const viewerId = document.getElementById('viewerId').value;
-    const profileId = document.getElementById('profileId').value;
-
-    // Connect to the backend 
-    const socket = io.connect(window.location.origin, {
-        transports: ["websocket","webtransport"],
-        addTrailingSlash: false,
-    });
-
-    // Emit Events 
-    followButton.addEventListener('click', function(){
-        socket.emit('profileFollow', {
-            follower: viewerId,
-            profile: profileId,
-        });
-    });
-
-    unfollowButton.addEventListener('click', function(){
-        socket.emit('profileUnfollow', {
-            follower: viewerId,
-            profile: profileId,
-        });
-    });
-
-</script>
-
-<%- include('partials/footer.ejs') %>
+</body>
+</html>

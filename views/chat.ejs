@@ -9,7 +9,8 @@
         justify-content: center;
         align-items: center;
         background-color: #40164b;     
-        width: 100%;   
+        width: 100%;
+        box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
     }
 
     #header h1{
@@ -97,14 +98,17 @@
     }
 
     #send-message{
-        background-color: rgba(85, 28, 99, 0.753);
+        /* background-color: rgba(85, 28, 99, 0.753); */
+        background-color: #40164b;
         position: fixed;
         bottom: 0;
-        padding-bottom: 100px;
+        padding-bottom: 70px;
+        padding-top: 20px;
         display: flex;
         justify-content: center;
         align-items: center;
         width: 100%;
+        box-shadow: rgba(0, 0, 0, 0.56) 0px 22px 70px 4px;
     }
 
     #send-message textarea{
@@ -149,7 +153,9 @@
 
 
 <div id="header">
-    <h1> <%= recipientData.username %> <i class="fa-regular fa-comment fa-solid fa-sm"></i></h1>
+    <a href="/profile/<%= recipientData.username %>" style="text-decoration: none; color: white;">
+        <h1> <%= recipientData.username %> <i class="fa-regular fa-comment fa-solid fa-sm"></i></h1>
+    </a>
 </div>
 
 <br>
@@ -187,7 +193,7 @@
     <a href="/discover"><i class="fa-solid fa-magnifying-glass tab-icon"></i></a>
     <a href="/upload"><i class="fa-solid fa-upload tab-icon"></i></a>
     <a href="/messages"><i class="fa-regular fa-comment tab-icon" style="color: rgb(182, 70, 70);"></i></a>
-    <a href="/profile/"><i class="fa-regular fa-user tab-icon"></i></a>
+    <a href="/profile/<%= senderData.username %>"><i class="fa-regular fa-user tab-icon"></i></a>
 </div>
 
 

@@ -89,8 +89,17 @@
         }
     }
 
+    #no-post{
+        text-align: center;
+        padding: 50px 10px 10px 10px;
+    }
+
+    #no-post h1{
+        font-weight: 500;
+    }
+
     #all-posts{
-        padding: 10px 10px 10px 10px;
+        padding: 50px 10px 10px 10px;
         width: fit-content;
     }
 
@@ -231,11 +240,17 @@
 
 
 
-<div id="search-area"> 
+<!-- <div id="search-area"> 
     <input type="text" name="search" id="" placeholder="Homepage search - COMING SOON!!!">
+</div> -->
+<% if (postArray.length === 0) { %>
+<div id="no-post">
+    <h1>Be the first to share something!</h1>
+    <a href="/upload" class="btn btn-dark">Post</a>
 </div>
+<% } else { %>
 
-
+<% } %>
 
 <div class="">
     <div id="all-posts" class="container-fluid">

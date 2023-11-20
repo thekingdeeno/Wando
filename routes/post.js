@@ -23,7 +23,16 @@ const router = express.Router();
 router.get('/', function(req, res){
 
     if (req.isAuthenticated()) {
-      res.render('upload')
+      async function render(){
+
+      const thisUser = await User.findById((req.user).id)
+
+        res.render('upload',{
+          username: thisUser.username
+        })        
+      }
+      render();
+
     } else {
       res.redirect('register');
     };

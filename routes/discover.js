@@ -24,7 +24,16 @@ const server = require('../app')
 
 
 router.get('/', function(req, res){
-    res.render('discover',{})
+    async function discover(){
+
+        const thisUser = await User.findById((req.user).id)
+        res.render('discover',{
+            thisUser: thisUser.username
+        })        
+    }
+
+    discover()
+
 })
 
 router.post('/', function(req, res){
