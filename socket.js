@@ -34,7 +34,7 @@ const io = socket(server, {
   });
   
   io.on('connection', function(socket){
-      console.log("made socket connection on "+ socket.id)
+      // console.log("made socket connection on "+ socket.id)
 
     // join default room for user 
     socket.join(socket.id);
@@ -197,9 +197,43 @@ const io = socket(server, {
   // WEBSOCKET SETUP FOR CHAT
 
       // Send message to specific chatroom
-      socket.on("chat-room", function(data){
-          socket.join(data);
+      socket.on("chat-room", function(chatId){
+        socket.join(chatId);
+
+        socket.on(chatId, function(chatData){
+
+
+
+
+          // console.log(chatData.recipientId)
+
+          Chat.findById(chatId).then(function(foundChat){
+            socket.emit(chatId, foundChat)
+          });
+
+        })
+
       });
+
+      // function to change last message status to read
+
+      socket.on('read-chat', function(data){
+          async function updateMessageStatus() {
+            const liveChat = await Chat.findById(data.chat);
+
+            (liveChat.messages).forEach(message => {
+              if ((message.authorId).toString() === data.recipient) {
+                message.read = true;
+              };
+
+              console.log(((message.authorId).toString()), data.recipient)
+            });
+
+            liveChat.save();
+          };
+          updateMessageStatus()
+      })
+
   
       // User is typing notification
       socket.on('typing',function(data){
@@ -209,7 +243,7 @@ const io = socket(server, {
   
       // Using Websocket (Socket.io) to send data to the database directly
       socket.on('chat',function(data) {
-          socket.to(data.room).emit('chat',data);
+          socket.to(data.room).emit('message', data);
   
   
       // send the recieved data into the Chat database

@@ -86,6 +86,7 @@
 
     #bio{
         font-weight: 200;
+        margin: 0px;
     }
 
     #header{
@@ -163,6 +164,7 @@
         background-color: rgba(165, 42, 42, 0.397);
         padding: 30px;
         border-radius: 10px;
+        width: 350px;
         box-shadow: rgba(0, 0, 0, 0.25) 0px 0.0625em 0.0625em, rgba(0, 0, 0, 0.25) 0px 0.125em 0.5em, rgba(255, 255, 255, 0.1) 0px 0px 0px 1px inset;
     }
 
@@ -240,6 +242,30 @@
         font-weight: 600;
     }
 
+    .read-more{
+
+    }
+
+    .read-more:hover{
+        cursor: pointer;
+        color: rgba(255, 255, 255, 0.596);
+    }
+
+    .load-comments{
+        color: rgba(255, 255, 255, 0.596);
+    }
+
+    .load-comments:hover{
+        cursor: pointer;
+        color: rgba(255, 255, 255, 0.384);
+    }
+
+    .load-comments a{
+        font-size: 15px;
+        font-weight: 600;
+    }
+
+
 
 
 </style>
@@ -276,6 +302,9 @@
         <p id="bio"><%=profileInfo.bio%></p>         
     <% } %>
 
+    <div id="link-in-bio">
+        <a href="<%=profileInfo.link%>"><%=profileInfo.link%></a>
+    </div>
 
     <p><%=postArray.length%> <span>Posts</span>  <%=(profileInfo.followers).length%> <span>Followers</span> <%=(profileInfo.following).length%> <span>Following</span></p>
 
@@ -304,7 +333,7 @@
     
     
     
-        <% postArray.forEach(post => { %>
+        <% (postArray.reverse()).forEach(post => { %>
     
     
             <% if (post.image) { %>
@@ -346,12 +375,15 @@
             </div>
     
             <div class="post-comments">
-                <% (post.comments).forEach(comment => { %>
+                <% (((post.comments).reverse()).slice(0,3)).forEach(comment => { %>
                 <div>
-                    <span><a href="/profile/<%= comment.username %> "><%= comment.username %></a> <%= comment.content %>.  <%= comment.likes %></span>                
+                    <span><a href="/profile/<%= comment.username %> "><%= comment.username %></a> <%= (comment.content).slice(0,65) %><% if ((comment.content).length > 60) { %><a class="read-more" onclick='comment("<%=post._id%>")'>...read more</a><% } %>  <%= comment.likes %></span>                
                 </div>
     
-                <% }) %>                    
+                <% }) %>
+                <% if ((post.comments).length > 3) { %>
+                 <span class="load-comments"><a onclick='comment("<%=post._id%>")'>more comments</a></span>
+                <% } %>                
             </div>
     
         </div>    
@@ -438,7 +470,7 @@
             console.log(e);
             socket.emit('new-comment', {
                 post: document.getElementById('post-id').value,
-                user: viewerId.value,
+                user: viewerId,
                 comment: commentInput.value,
             });
             // document.getElementById('comment-overlay').style = "display: none;"
@@ -479,7 +511,13 @@
     <a href="/discover"><i class="fa-solid fa-magnifying-glass tab-icon"></i></a>
     <a href="/upload"><i class="fa-solid fa-upload tab-icon"></i></a>
     <a href="/messages"><i class="fa-regular fa-comment tab-icon"></i></a>
-    <a href="/profile/<%=viewerInfo.username%>"><i class="fa-regular fa-user tab-icon" style="color: rgb(182, 70, 70);"></i></a>
+
+    <% if ((viewerInfo._id).toString() === (profileInfo._id).toString()) { %>
+        <a href="/profile/<%=viewerInfo.username%>"><i class="fa-solid fa-user tab-icon" style="color: rgb(182, 70, 70);"></i></a>
+    <% }else{ %>
+        <a href="/profile/<%=viewerInfo.username%>"><i class="fa-solid fa-user tab-icon"></i></a>
+    <% } %>
+    
 </div>
 
 </body>

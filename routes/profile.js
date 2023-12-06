@@ -21,8 +21,8 @@ const router = express.Router();
 
 
 router.get('/:searchParam', function(req, res){
-
-    async function renderProfile(){
+    if (req.isAuthenticated()) {
+            async function renderProfile(){
         const viewerData = await User.findById((req.user).id);
         const profileData = await User.findOne({username: req.params.searchParam});
 
@@ -37,13 +37,16 @@ router.get('/:searchParam', function(req, res){
             });
         } catch (error) {
             res.send("<h1>Error: User Not Found</h1><p>Sorry this User doesn't exist or had deleted thier account</p>");
-            alert('Error');
             console.log(error)
         };
 
     };
 
     renderProfile();
+    } else {
+        res.redirect('/register')
+    }
+
 
 });
 

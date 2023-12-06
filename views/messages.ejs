@@ -163,6 +163,10 @@
         font-weight: 300;
     }
 
+    .unread-icon{
+        float: right;
+    }
+
     .chat :hover{
         background-color: #651C36;
     }
@@ -208,24 +212,29 @@
             <h5>Chats</h5>
             <hr>
             
-            <% chats.sort((a,b)=> (a.messages[a.messages.length -1].sentAt) - (b.messages[a.messages.length -1].sentAt)) %>
+            <% chats.sort((a,b)=> (a.messages[a.messages.length -1].sentAt) - (b.messages[b.messages.length -1].sentAt)) %>
             <% chats.reverse() %>
 
             <% chats.forEach(chat => { %>
                 <% (chat.users).forEach(user => { %>
                     <% if ((user.userId).toString() != myObjId.toString()) { %>
 
-                        <!-- write a function to sort messages according to date here -->
 
                         <div class="chat">
-                            <a href="/chat/<%=chat._id%>/#chat"+>
+                            <a href="/chat/<%=chat._id%>"+>
                                 <div class="chat-link">
                                     <span class="name"><%=user.userName%></span>
 
-                                    <% if ((chat.messages[0]).authorName === myUsername) { %>
-                                        <div class="message">You: <small><%=(chat.messages[(chat.messages.length)-1]).text %></small></div>
+                                    <% if ((chat.messages[(chat.messages).length - 1]).authorName === myUsername) { %>
+                                        <div class="message">You: <small><%=((chat.messages[(chat.messages.length)-1]).text).slice(0,80) %></small></div>
                                     <% }else{ %>
-                                        <div class="message"><small><%=(chat.messages[(chat.messages.length)-1]).text %></small></div>
+                                        <div class="message"><small><%=((chat.messages[(chat.messages.length)-1]).text).slice(0, 80) %></small>
+
+                                            <% if (((chat.messages[(chat.messages).length - 1]).read === false)) { %>
+                                             <span class="unread-icon"> <em> <i class="fa-solid fa-circle-exclamation" style="color: #ffffff;"></i> </em></span>
+                                            <% } %>
+                                             
+                                        </div>
                                     <% } %>
                                 </div>  
                             </a>
@@ -295,7 +304,7 @@ socket.on('msgUsers', function(data){
     <a href="/home"><i class="fa-solid fa-house tab-icon"></i></a> 
     <a href="/discover"><i class="fa-solid fa-magnifying-glass tab-icon"></i></a>
     <a href="/upload"><i class="fa-solid fa-upload tab-icon"></i></a>
-    <a href="/messages"><i class="fa-regular fa-comment tab-icon" style="color: rgb(182, 70, 70);"></i></a>
+    <a href="/messages"><i class="fa-solid fa-comment tab-icon" style="color: rgb(182, 70, 70);"></i></a>
     <a href="/profile/<%=myUsername%>"><i class="fa-regular fa-user tab-icon"></i></a>
 </div>
 

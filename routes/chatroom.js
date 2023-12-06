@@ -26,7 +26,8 @@ const server = require('../app')
 
 router.get('/:searchParam', function(req, res){
 
-    const chatCall = (req.params.searchParam).slice(0,7)
+  if (req.isAuthenticated()) {
+        const chatCall = (req.params.searchParam).slice(0,7)
     if (chatCall === "newChat") {
   
       const userSearchId = (req.params.searchParam).slice(7,31)
@@ -96,25 +97,12 @@ router.get('/:searchParam', function(req, res){
 
         
     };
+  } else {
+    res.redirect('/register');
+  }
+
+
   });
-
-
-
-
-
-//   router.post("/", function(req, res){
-//     Chat.find({$and: [{"users.userId":(req.user).id},{"users.userId": req.body.recipientId}]}).then(function(foundChat){
-      
-//       foundChat[0].messages.push({
-//         authorName: req.body.senderName,
-//         authorId: req.body.senderId,
-//         text: req.body.message,
-//       });
-  
-//         foundChat[0].save()
-//     });
-  
-//   })
 
 
 module.exports = router;

@@ -2,6 +2,18 @@
 
 
 <style>
+    #back-button{
+        position: fixed;
+        z-index: 1;
+    }
+
+    #back-button button{
+        color: white;
+        background-color: rgba(0, 0, 0, 0);
+        border: none;
+        padding: 20px 0 0 20px;
+    }
+
     #header{
         position: fixed;
         text-align: center;
@@ -21,7 +33,21 @@
 
     #messages{
         /* overflow: scroll; */
-        padding: 100px 0 150px 0;
+        padding: 100px 0 0px 0;
+    }
+
+    #bottomChat{
+        padding: 0 0 200px 0;
+        /* background-color: rgb(180, 12, 12); */
+    }
+
+    #is-typing p{
+        background-color: rgb(75, 75, 75);
+        padding: 10px;
+        width: max-content;
+        max-width: 80%;
+        border-radius: 15px 15px 15px 0px;
+        box-shadow: rgba(0, 0, 0, 0.25) 0px 14px 28px, rgba(0, 0, 0, 0.22) 0px 10px 10px;
     }
 
     .chat-left{
@@ -148,7 +174,9 @@
 </style>
 
 
-
+<span id="back-button">
+    <button onclick='window.location.href = "/messages";'><h1><</h1></button>
+</span>
 
 
 
@@ -158,26 +186,18 @@
     </a>
 </div>
 
+
 <br>
 
 <div id="messages">
-    <div id="is-typing"></div>
 
-    <% (chatData.messages).forEach(message => { %>
-        <% if ((message.authorId).toString() !== (senderData._id).toString()) { %>
-            <div id="db-chat" class="db-chat chat-right" style="text-align: right;">
-        <% }else{ %>
-            <div id="db-chat" class="db-chat chat-left" style="text-align: left;">
-        <% } %>
-            <p><%= message.text %>  <em id="time"><%= (message.sentAt).toLocaleTimeString(); %></em></p>
-
-            </div>
-    <% }) %>
-
-    <div id="chat">
-
-    </div>
 </div>
+
+<div id="bottomChat">
+    <div class="chat-left" id="is-typing"></div>
+</div>
+
+<a name="chat" id="chat"></a>
 
 
 <div id="send-message">
@@ -192,23 +212,47 @@
     <a href="/home"><i class="fa-solid fa-house tab-icon"></i></a> 
     <a href="/discover"><i class="fa-solid fa-magnifying-glass tab-icon"></i></a>
     <a href="/upload"><i class="fa-solid fa-upload tab-icon"></i></a>
-    <a href="/messages"><i class="fa-regular fa-comment tab-icon" style="color: rgb(182, 70, 70);"></i></a>
+    <a href="/messages"><i class="fa-solid fa-comment tab-icon" style="color: rgb(182, 70, 70);"></i></a>
     <a href="/profile/<%= senderData.username %>"><i class="fa-regular fa-user tab-icon"></i></a>
 </div>
 
 
 
-<!-- Hidden Inputs -->
+<!-- Hidden Inputs for Front-End -->
 <input id="chatId" type="hidden" value="<%=wssConnect%>">
-<input id="senderId" type="hidden" name="senderId" value="<%= recipientData._id %>">
+<input id="senderId" type="hidden" name="senderId" value="<%= senderData._id %>">
 <input id="senderName" type="hidden" name="senderName" value="<%= senderData.username %>">
 <input id="recipientId" type="hidden" name="recipientId" value="<%= recipientData._id %>">
 <input id="recipientName" type="hidden" name="recipientName" value="<%= recipientData.username %>">
-<!-- Hidden Inputs -->
+
+
+<!-- Hidden Inputs for Back-End -->
+
+<input id="senderData" value="<%=senderData%>" type="hidden">
+<input id="recipientData" value="<%=recipientData%>" type="hidden">
+
 
 
 
 <script>
+
+function scrollDown() {
+        window.location = "#chat";
+    };
+
+function jumpToBottom() {
+    setTimeout(() => {
+        $("html, body").animate({ 
+                    scrollTop: $( 
+                      'html, body').get(0).scrollHeight 
+                }, 0); 
+    }, 400); 
+}
+
+// jumpToBottom()
+// window.scrollTo(0,document.body.scrollHeight);
+// window.onpageshow = scrollDown()
+
 const chatId = (document.getElementById("chatId")).value;
 
 // Query DOM
@@ -224,7 +268,12 @@ const recipientId = document.getElementById('recipientId');
 const recipientName = document.getElementById('recipientName');
 const message = document.getElementById('message');
 
+// Query Information for Backend
+const senderData = document.getElementById('senderData').value;
+const recipientData = document.getElementById('recipientData').value;
+// const chatId = (document.getElementById("chatId")).value; (already called above)
 
+console.log(recipientId.value)
 
 // Make Connection
 const socket = io.connect(window.location.origin, {
@@ -235,35 +284,119 @@ const socket = io.connect(window.location.origin, {
 // join room 
 socket.emit("chat-room", chatId);
 
+// function to change last message status to read 
+function readChat(params) {
+    socket.emit('read-chat', {
+        chat: chatId,
+        recipient: recipientId.value,
+    })
+};
+readChat()
 
-// Emit Events 
+
+// Emit Chat Data to Socket Backend
+socket.emit(chatId, {
+    id: chatId,
+    sender: senderData,
+    recipient: recipientData,
+})
+
+// Emit Events
+
+
+// function to emit message to the backEnd 
+function sendMessage(){
+        if (message.value.length !== 0 ) {
+        socket.emit('chat', {
+            room: chatId,
+            senderId: senderId.value,
+            senderName: senderName.value,
+            recipientId: recipientId.value,
+            recipientName: recipientName.value,
+            message: message.value,
+        });
+
+        document.getElementById('messages').innerHTML += 
+            `<div id="db-chat" class="db-chat chat-right" style="text-align: right;">
+                    <p>
+                        ${message.value}   
+                    </p>
+            </div>`;
+        jumpToBottom();
+        message.value = "";
+        message.style = "";
+    }
+}
+// function to prevent enter in text 
+message.addEventListener('keypress', function(event){
+    if (event.charCode === 13) {
+        event.preventDefault()
+    }
+});
+// adding eventslisteners to send button and enter key 
 btn.addEventListener('click', function(){
-    socket.emit('chat', {
-        room: chatId,
-        senderId: senderId.value,
-        senderName: senderName.value,
-        recipientId: recipientId.value,
-        recipientName: recipientName.value,
-        message: message.value,
-    });
+    sendMessage();
+});
+document.addEventListener('keypress', function(event) {
+    if (event.key==='Enter') {
+        sendMessage();
+        message.value = "";
+    }
 });
 
-message.addEventListener('keypress', function(){
-    // socket.to(chatId).emit('typing', {
-    //     typer: senderName.value,
-    //     room: chatId
-    // })
-    socket.emit('typing', {room: chatId, typer: senderName.value});
+
+
+// Emit Chat data (this time through the websocket)
+socket.on(chatId, function(data) {
+
+    (data.messages).forEach(message => {
+        const textLeft = 
+        `<div id="db-chat" class="db-chat chat-left" style="text-align: left;">
+            <p>
+                 ${message.text}   
+            </p>
+        </div>`
+
+        const textRight = 
+        `<div id="db-chat" class="db-chat chat-right" style="text-align: right;">
+            <p>
+                 ${message.text}   
+            </p>
+        </div>`
+        if (message.authorId===senderId.value) {
+            document.getElementById('messages').innerHTML += textRight;
+        } else {
+            document.getElementById('messages').innerHTML += textLeft;
+        };
+
+        // window.location = "#chat"
+        jumpToBottom()
+        
+    });
+
+})
+
+// To scroll to the bottom of a div
+
+message.addEventListener('keyup', function(key){
+    socket.emit('typing', {room: chatId, typer: senderName.value, char: message.value});
+    // document.getElementByTagName('button').setAttribute("id", "hello")
 })
 
 
 // Listening for emit 
-socket.on('chat', function(data){
-    isTyping.innerHTML = ""
-    // output.innerHTML += "<p>"+ data.senderName+ ":" + data.message+"</p>";
-    if (message.value === "") {
-        isTyping.innerHTML = ""
-    }
+socket.on('message', function(data){
+    document.getElementById('messages').innerHTML += 
+    `<div id="db-chat" class="db-chat chat-left" style="text-align: left;">
+            <p>
+                    ${data.message}
+            </p>
+    </div>`
+
+    isTyping.innerHTML = "";
+    jumpToBottom();
+    readChat()
+
 });
 
 socket.on('disconnect', function(){
@@ -274,13 +407,19 @@ socket.on('disconnect', function(){
 });
 
 socket.on('typing', function(data){
-    console.log(data)
-    if (data.typer===recipientName) {
-        isTyping.innerHTML = "<p><em>"+ data.typer +" is typing...</em></p>";
-    }
-    if (message.value === "") {
+
+    document.getElementById('is-typing').innerHTML =
+            
+            `<p><em>typing...</em></p>`
+
+        setTimeout(() => {
+            isTyping.innerHTML = ""
+        },  5000);   
+
+    if (data.char==="") {
         isTyping.innerHTML = ""
-    }
+    };
+
 });
 
 
@@ -290,9 +429,8 @@ textArea.addEventListener("input", () => {
     textArea.style.height = "auto"
     textArea.style.height = textArea.scrollHeight + "px"
 })
-
-
 </script>
 
 </body>
 </html>
+

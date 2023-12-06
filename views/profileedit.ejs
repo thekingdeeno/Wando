@@ -1,41 +1,136 @@
 <%- include('partials/header.ejs') %>
 
-<div>
-    <h1>Profile Settings</h1>
+<style>
+    #back-button{
+        position: fixed;
+        z-index: 1;
+    }
+
+    #back-button button{
+        color: white;
+        background-color: rgba(0, 0, 0, 0);
+        border: none;
+        padding: 15px 0 0 20px;
+    }
+
+    #edit-section{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    @media  (max-width: 720px) {
+        form{
+            margin-bottom: 100px;
+        }
+    }
+
+    form{
+        background-color: rgba(165, 42, 42, 0.397);
+        width: max-content;
+        padding:20px 20px 0px 20px;
+        margin-top: 15px;
+        /* border-radius: 10px; */
+        box-shadow: rgba(0, 0, 0, 0.25) 0px 0.0625em 0.0625em, rgba(0, 0, 0, 0.25) 0px 0.125em 0.5em, rgba(255, 255, 255, 0.1) 0px 0px 0px 1px inset;
+    }
+
+    form div{
+        margin-top: 10px;
+    }
+
+    input{
+        padding: 5px;
+        border-radius: 10px;
+        border: none;
+    }
+
+    textarea{
+        padding: 5px;
+        border-radius: 10px;
+        border: none;
+        width: 100%;
+    }
+
+    @media  (max-width: 720px) {
+        #contact-phone{
+            margin-top: 10px;
+        }
+    }
+
+    #save-btn{
+        text-align: center;
+        padding: 10px;
+        margin-top: 10px;
+    }
+
+</style>
+<span id="back-button">
+    <button onclick="history.back()"><h1><</h1></button>
+</span>
+
+<nav class="navbar navbar-expand-lg " style="background-color: rgb(64, 22, 75);">
+    <div class="container-fluid" id="navbar">
+        <h4><i class="fa-solid fa-icons fa-2xl"></i> EDIT PROFILE</h4>
+    </div>
+</nav>
+
+<div id="edit-section">
+    
     <form action="/profileedit" method="post" id="form" onsubmit="">
         <div>
             <label for="fullname">Name</label>
+            <br>
             <input type="text" name="fullname" id="fullname" value="<%=userData.fullname%>">            
         </div>
         <div>
             <label for="usename">Username</label>
+            <br>
             <input type="hidden" id="oldUsername" value="<%=userData.username%>">
             <input type="text" name="username" id="username" value="<%=userData.username%>"><span id="usernameError"></span>           
         </div>
         <div>
             <label for="bio">Bio</label>
+            <br>
             <textarea name="bio" id="bio" cols="" rows="1"><%=userData.bio%></textarea>            
         </div>
         <div>
             <label for="link">Link</label>
+            <br>
             <input type="text" name="link" id="link" value="<%=userData.link%>">            
         </div>
         <div>
             <label for="contact">Contact</label>
+            <br>
             <input type="text" name="contactEmail" id="contact-email" placeholder="Email" value="<%=userData.contactEmail%>">
             <input type="text" name="contactPhone" id="contact-phone" placeholder="Phone No" value="<%=userData.contactPhone%>">            
         </div>
 
-
-
-
-        <button type="submit" id="submit-btn">Save</button>
+        <div id="save-btn">
+           <button class="btn btn-dark" type="submit" id="submit-btn">Save</button> 
+        </div>
+        
     </form>
 
-    <h3><a href="/accountemail">Change Account Email</a></h3>
+    <!-- <h3><a href="/accountemail">Change Account Email</a></h3> -->
+</div>
+
+<div id="fixed-tab">
+    <a href="/home"><i class="fa-solid fa-house tab-icon"></i></a> 
+    <a href="/discover"><i class="fa-solid fa-magnifying-glass tab-icon"></i></a>
+    <a href="/upload"><i class="fa-solid fa-upload tab-icon"></i></a>
+    <a href="/messages"><i class="fa-regular fa-comment tab-icon"></i></a>
+    <a href="/profile/<%=userData.username%>"><i class="fa-solid fa-user tab-icon" style="color: rgb(182, 70, 70);"></i></a>
 </div>
 
 <script>
+
+let textArea = document.querySelector("textarea")
+
+textArea.addEventListener("input", () => {
+    textArea.style.height = "auto"
+    textArea.style.height = textArea.scrollHeight + "px"
+})
+
     // Query DOM 
     const oldUsername = document.getElementById('oldUsername');
     const username = document.getElementById('username');
@@ -75,4 +170,5 @@
 
 </script>
 
-<%- include('partials/footer.ejs') %>
+</body>
+</html>

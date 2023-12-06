@@ -24,8 +24,8 @@ const server = require('../app')
 
 
 router.get('/', function(req, res){
+    if (req.isAuthenticated()) {
     async function discover(){
-
         const thisUser = await User.findById((req.user).id)
         res.render('discover',{
             thisUser: thisUser.username
@@ -33,6 +33,10 @@ router.get('/', function(req, res){
     }
 
     discover()
+
+    } else {
+        res.redirect('register');
+    }
 
 })
 

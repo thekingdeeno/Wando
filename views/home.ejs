@@ -184,6 +184,25 @@
         font-weight: 600;
     }
 
+    .read-more:hover{
+        cursor: pointer;
+        color: rgba(255, 255, 255, 0.596);
+    }
+
+    .load-comments{
+        color: rgba(255, 255, 255, 0.596);
+    }
+
+    .load-comments:hover{
+        cursor: pointer;
+        color: rgba(255, 255, 255, 0.384);
+    }
+
+    .load-comments a{
+        font-size: 15px;
+        font-weight: 600;
+    }
+
 
 
 </style>
@@ -270,7 +289,7 @@
     <div class="post" class="">
 
         <div class="post-header">
-            <i class="fa-solid fa-user"></i> 
+            <i class="fa-solid fa-user"></i>
             <a href="/profile/<%= post.authorUsername %>"><%= post.authorUsername %></a>
             
             <!-- <button class="btn btn-light follow-button" type="submit">Follow</button> -->
@@ -301,12 +320,14 @@
         </div>
 
         <div class="post-comments">
-            <% (post.comments).forEach(comment => { %>
+            <% (((post.comments).reverse()).slice(0,3)).forEach(comment => { %>
             <div>
-                <span><a href="/profile/<%= comment.username %> "><%= comment.username %></a> <%= comment.content %>.  <%= comment.likes %></span>                
+                <span><a href="/profile/<%= comment.username %> "><%= comment.username %></a> <%= (comment.content).slice(0,65) %><% if ((comment.content).length > 60) { %><a class="read-more" onclick='comment("<%=post._id%>")'>...read more</a><% } %>  <%= comment.likes %></span>                
             </div>
-
-            <% }) %>                    
+            <% }) %>   
+            <% if ((post.comments).length > 3) { %>
+                <span class="load-comments"><a onclick='comment("<%=post._id%>")'>more comments</a></span>
+               <% } %> 
         </div>
 
     </div>    
@@ -387,7 +408,7 @@
         document.getElementById('comment-overlay').style = "display: flex;";
         document.getElementById('post-id').setAttribute('value', postId);
         await socket.on('show-comments', function(data){
-            (data.comments).forEach(comment => {
+            ((data.comments).reverse()).forEach(comment => {
                 document.getElementById('comments').innerHTML += '<div id="comment"><a href=/profile/'+comment.username+'>'+comment.username+'</a> <span>'+comment.content+'</span></div>'
             });
         })
