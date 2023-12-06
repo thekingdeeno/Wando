@@ -22,12 +22,6 @@ const router = express.Router();
 
 const app = express();
 
-// Local Server Setup
-const server = app.listen(process.env.PORT, function(){
-  console.log(`Wando app server running on ${process.env.PORT}`)
-});
-// I'm exporting the "server" variable to use in websocket functions within routes
-module.exports = server;
 
 
 app.use(express.static("public"));
@@ -55,6 +49,16 @@ app.use(passport.session());
 
 mongoose.connect(`mongodb+srv://deeno:${process.env.MONGODB_PASSWORD}@cluster0.zg4yvyq.mongodb.net/Wando_communications?retryWrites=true&w=majority`).then(function(){
     console.log("Successfully connected to Wando database");
+
+  // Local Server Setup
+  const server = app.listen(process.env.PORT, function(){
+    console.log(`Wando app server running on ${process.env.PORT}`)
+  });
+  
+  // I'm exporting the "server" variable to use in websocket functions within routes
+  module.exports = server;
+
+
 }).catch(err=>{
     console.log(err);
 });
