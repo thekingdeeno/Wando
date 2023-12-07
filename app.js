@@ -16,6 +16,7 @@ const { ObjectId } = require("mongodb");
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const FacebookStrategy = require('passport-facebook').Strategy;
 const TwitterStrategy = require('passport-twitter').Strategy;
+const TiktokStrategy = require('passport-tiktok-auth').Strategy;
 // routing func setup
 const router = express.Router();
 
@@ -198,6 +199,22 @@ passport.use(new TwitterStrategy({
   },
 ));
 
+
+
+// -------- TIKTOK SIGN-IN AUTHOURIZATION --------- //
+
+passport.use(new TiktokStrategy({
+  clientID: process.env.TIKTOK_CLIENT_KEY,
+  clientSecret: process.env.TIKTOK_CLIENT_SECRET,
+  scope: ['user.info.basic'],
+  callbackURL: "https://wando.onrender.com/auth/tiktok/wando"
+},
+function(accessToken, refreshToken, profile, done) {
+  User.findOrCreate({ tiktokId: profile.id }, function (err, user) {
+      return done(err, user);
+  });
+}
+));
 
 
 

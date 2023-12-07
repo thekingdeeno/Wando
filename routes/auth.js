@@ -16,6 +16,7 @@ const { ObjectId } = require("mongodb");
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const FacebookStrategy = require('passport-facebook').Strategy;
 const TwitterStrategy = require('passport-twitter').Strategy;
+const TiktokStrategy = require('passport-tiktok-auth').Strategy;
 // routing func setup
 const router = express.Router();
 
@@ -59,6 +60,19 @@ router.get('/twitter/wando',
     // Successful authentication, redirect home.
     res.redirect('/home');
   });
+
+
+  // TIKTOK AUTHOURIZATION REGISTRATION ROUTE
+  router.get('/tiktok',
+  passport.authenticate('tiktok'));
+
+  // TIKTOK AUTHOURIZATION CALLBACK ROUTE
+  router.get('/tiktok/wando', 
+    passport.authenticate('tiktok', { failureRedirect: '/register' }),
+    function(req, res) {
+        // Successful authentication, redirect home.
+        res.redirect('/home');
+    });
 
 
 
