@@ -58,6 +58,9 @@ mongoose.connect(`mongodb+srv://deeno:${process.env.MONGODB_PASSWORD}@cluster0.z
   // I'm exporting the "server" variable to use in websocket functions within routes
   module.exports = server;
 
+  // Socket.io Functions Route
+const useSocket = require("./socket");
+useSocket()
 
 }).catch(err=>{
     console.log(err);
@@ -266,9 +269,6 @@ app.use('/discover', discoverRoute);
 
 
 
-// Socket.io Functions Route
-const useSocket = require("./socket");
-useSocket()
 // -------------- Testing Area (begining) ------------------
 
 //--------------- Testing Area (ending) --------------------
