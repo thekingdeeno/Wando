@@ -218,6 +218,16 @@ app.get("/", function(req, res){
     res.sendFile(`${__dirname}/index.html`);
 });
 
+// Privacy Policy
+app.get("/policy", function(req, res){
+  res.sendFile(`${__dirname}/policy.html`)
+})
+
+// Terms
+app.get("/terms", function(req, res){
+  res.sendFile(`${__dirname}/terms.html`)
+})
+
 // Register Route
 app.get("/register", function(req, res){
     res.render('register');
