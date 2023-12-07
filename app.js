@@ -54,7 +54,7 @@ mongoose.connect(`mongodb+srv://deeno:${process.env.MONGODB_PASSWORD}@cluster0.z
   const server = app.listen(process.env.PORT, function(){
     console.log(`Wando app server running on ${process.env.PORT}`)
   });
-  
+
   // I'm exporting the "server" variable to use in websocket functions within routes
   module.exports = server;
 
@@ -98,7 +98,7 @@ passport.serializeUser(function(user, cb) {
 passport.use(new GoogleStrategy({
     clientID: process.env.GOOGLE_CLIENT_ID,
     clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-    callbackURL: "http://localhost:3000/auth/google/wando",
+    callbackURL: "https://wando.onrender.com/auth/google/wando",
     userProfileURL: "https://www.googleapis.com/oauth2/v3/userinfo"
     },
     function(accessToken, refreshToken, profile, cb) {
@@ -132,7 +132,7 @@ passport.use(new GoogleStrategy({
 passport.use(new FacebookStrategy({
     clientID: process.env.FACEBOOK_APP_ID,
     clientSecret: process.env.FACEBOOK_APP_SECRET,
-    callbackURL: "http://localhost:3000/auth/facebook/wando"
+    callbackURL: "https://wando.onrender.com/auth/facebook/wando"
   },
   function(accessToken, refreshToken, profile, cb) {
     User.findOrCreate({ facebookId: profile.id }, function (err, user) {
@@ -165,7 +165,7 @@ passport.use(new FacebookStrategy({
 passport.use(new TwitterStrategy({
     consumerKey: process.env.TWITTER_CONSUMER_API_KEY,
     consumerSecret: process.env.TWITTER_CONSUMER_API_KEY_SECRET,
-    callbackURL: "http://localhost:3000/auth/twitter/wando"
+    callbackURL: "https://wando.onrender.com/auth/twitter/wando"
   },
   
   function(token, tokenSecret, profile, cb) {
