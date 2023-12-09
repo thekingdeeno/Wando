@@ -309,4 +309,4 @@ async function startNgrok (){
   console.log(`Ingress established at: ${url}`);
 };
 
-// startNgrok()
+startNgrok()
