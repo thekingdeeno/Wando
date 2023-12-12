@@ -348,6 +348,14 @@ const io = socket(server, {
       });
 
 
+      //SOCKET SETUP TO VIEW FULL POST
+      socket.on('show-post', function(postId){
+        Post.findById(postId).then(function(foundPost){
+          socket.emit('show-post', foundPost)
+        });
+      });
+
+
 
 
 
