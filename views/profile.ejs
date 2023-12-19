@@ -559,9 +559,12 @@
                 });
             });            
         } catch (error) {
-            console.log(error)
+            console.log(error);
         }
 
+        socket.on('404', function(data) {
+            console.log('hello')
+        })
 
 
     

@@ -49,11 +49,26 @@ router.post('/', function(req, res){
         foundUser.contactEmail = req.body.contactEmail;
         foundUser.contactPhone = req.body.contactPhone;
 
-        foundUser.save().then(()=>{
-            res.redirect(`/profile/${foundUser.username}`)
+        const foundPost = await Post.find({authorId: (req.user).id});
+        const commentedPosts = await Post.find({"comments.userId": (req.user).id});
+        
+        foundPost.forEach(post => {
+            post.authorUsername = req.body.username;
+            post.save()
         });
+        commentedPosts.forEach(post => {
+            (post.comments).forEach(comment =>{
+                if ((comment.userId).toString() === (req.user).id) {
+                    comment.username = req.body.username;
+                }
+            });
+            post.save();
+        });
+        foundUser.save();
     };
-    updateProfile()
+    updateProfile().then(()=>{
+        res.redirect(`/profile/${req.body.username}`); 
+    })
 });
 
 

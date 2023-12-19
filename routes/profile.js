@@ -19,6 +19,8 @@ const TwitterStrategy = require('passport-twitter').Strategy;
 // routing func setup
 const router = express.Router();
 
+const server = require('../app');
+
 
 router.get('/:searchParam', function(req, res){
     if (req.isAuthenticated()) {
@@ -35,9 +37,12 @@ router.get('/:searchParam', function(req, res){
                 profileInfo: profileData,
                 viewerInfo: viewerData,
             });
+
         } catch (error) {
-            res.send("<h1>Error: User Not Found</h1><p>Sorry this User doesn't exist or had deleted thier account</p>");
-            console.log(error)
+
+            // res.redirect(`/profile/${viewerData.username}`);
+            res.redirect(`/home`);
+            
         };
 
     };
