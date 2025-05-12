@@ -20,6 +20,9 @@ body {
     padding: 20px 10px 10px 0px;
 }
 
+#showcase{
+    margin-bottom: 200px;
+}
 
 #left-showcase{
 /* background-color: rgba(0, 0, 255, 0.363); */
@@ -53,6 +56,11 @@ padding: 40px 25px 80px 10px;
 }
 
 footer{
+    @media screen and (min-width: 600px) {
+        position: absolute;
+    }
+    width: 100%;
+    bottom: 0px;
     text-align: center;
     padding: 30px 0 20px 0;
     background-color: rgb(64, 22, 75);

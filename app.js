@@ -49,7 +49,7 @@ app.use(passport.session());
 
 // MONGOOSE OPERATIONS 
 
-mongoose.connect(`mongodb+srv://deeno:${process.env.MONGODB_PASSWORD}@cluster0.zg4yvyq.mongodb.net/Wando_communications?retryWrites=true&w=majority`).then(function(){
+mongoose.connect(process.env.MONGODB_URL).then(function(){
     console.log("Successfully connected to Wando database");
 
   // Local Server Setup
@@ -103,8 +103,8 @@ passport.serializeUser(function(user, cb) {
 passport.use(new GoogleStrategy({
     clientID: process.env.GOOGLE_CLIENT_ID,
     clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-    callbackURL: "https://wando.onrender.com/auth/google/wando",
-    userProfileURL: "https://www.googleapis.com/oauth2/v3/userinfo"
+    callbackURL: process.env.GOOGLE_CALLBACK_URL,
+    userProfileURL: process.env.GOOGLE_USER_PROFILE_URL
     },
     function(accessToken, refreshToken, profile, cb) {
         User.findOrCreate({ googleId: profile.id }, function (err, user) {
@@ -137,7 +137,7 @@ passport.use(new GoogleStrategy({
 passport.use(new FacebookStrategy({
     clientID: process.env.FACEBOOK_APP_ID,
     clientSecret: process.env.FACEBOOK_APP_SECRET,
-    callbackURL: "https://wando.onrender.com/auth/facebook/wando"
+    callbackURL: process.env.FACEBOOK_CALLBACK_URL
   },
   function(accessToken, refreshToken, profile, cb) {
     User.findOrCreate({ facebookId: profile.id }, function (err, user) {
@@ -170,7 +170,7 @@ passport.use(new FacebookStrategy({
 passport.use(new TwitterStrategy({
     consumerKey: process.env.TWITTER_CONSUMER_API_KEY,
     consumerSecret: process.env.TWITTER_CONSUMER_API_KEY_SECRET,
-    callbackURL: "https://wando.onrender.com/auth/twitter/wando"
+    callbackURL: process.env.TWITTER_CALLBACK_URL
   },
   
   function(token, tokenSecret, profile, cb) {
